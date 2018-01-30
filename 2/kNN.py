@@ -59,7 +59,7 @@ def datingClassTest():
     numTestVecs = int(m * hoRatio)
     errorCount = 0.0
     for i in range(numTestVecs):
-        classifierResult = classify0(normMat[1, :], normMat[numTestVecs:m, :],
+        classifierResult = classify0(normMat[i, :], normMat[numTestVecs:m, :],
                                      datingLabels[numTestVecs:m], 3)
         print "the classifier came back with: %s, the real answer is: %s" % (
             classifierResult, datingLabels[i]
