@@ -1,5 +1,6 @@
-from numpy import *
+from os import listdir
 import operator
+from numpy import *
 
 
 def createDataSet():
@@ -52,7 +53,7 @@ def autoNorm(dataSet):
 
 
 def datingClassTest():
-    hoRatio = 0.10
+    hoRatio = 0.50
     datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
     normMat, ranges, minVals = autoNorm(datingDataMat)
     m = normMat.shape[0]
@@ -69,8 +70,48 @@ def datingClassTest():
     print "the total error rate is: %f" % (errorCount / float(numTestVecs))
 
 
+def img2vector(filename):
+    returnVector = zeros((1, 1024))
+    fr = open(filename)
+    for i in xrange(32):
+        lineStr = fr.readline()
+        for j in xrange(32):
+            returnVector[0, 32 * i + j] = int(lineStr[j])
+    return returnVector
+
+
+def handwritingClassTest():
+    hwLabels = []
+    trainingFileList = listdir('trainingDigits')
+
+    m = len(trainingFileList)
+    trainingMat = zeros((m, 1024))
+    for i in xrange(m):
+        fileNameStr = trainingFileList[i]
+        fileStr = fileNameStr.split(".")[0]
+
+        classNumStr = int(fileStr.split("_")[0])
+        hwLabels.append(classNumStr)
+        trainingMat[i, :] = img2vector("trainingDigits/%s" % fileNameStr)
+
+    testFileList = listdir('testDigits')
+    errorCount = 0.0
+    mTest = len(testFileList)
+    for i in xrange(mTest):
+        fileNameStr = testFileList[i]
+        fileStr = fileNameStr.split(".")[0]
+        classNumStr = int(fileStr.split("_")[0])
+        vectorUnderTest = img2vector("testDigits/%s" % fileNameStr)
+        classifierResult = classify0(vectorUnderTest, trainingMat, hwLabels, 3)
+        print "test %d, the classifier came back with: %d, the real answer is: %d" % (i, classifierResult, classNumStr)
+        if classifierResult != classNumStr:
+            errorCount += 1
+    print "the total number of errors is: %d " % errorCount
+    print "the total error rate is: %f" % (errorCount / float(mTest))
+
+
 if __name__ == "__main__":
-    import matplotlib.pyplot as plt
+    # import matplotlib.pyplot as plt
     # group, labels = createDataSet()
     # classify0([0, 0], group, labels, 3)
     # datingDataMat, datingLabels = file2matrix('datingTestSet2.txt')
@@ -85,4 +126,10 @@ if __name__ == "__main__":
     # normMat, ranges, minVals = autoNorm(datingDataMat)
     # print normMat
 
-    datingClassTest()
+    # datingClassTest()
+
+    # testVector = img2vector("testDigits/0_13.txt")
+    # print testVector[0, 0:31]
+    # print testVector[0, 32:63]
+
+    handwritingClassTest()
