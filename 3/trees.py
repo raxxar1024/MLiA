@@ -127,7 +127,7 @@ if __name__ == "__main__":
     # myTree = createTree(myDat, labels)
     # print myTree
 
-    from treePlotter import retrieveTree
+    from treePlotter import retrieveTree, createPlot
     #
     myTree = retrieveTree(0)
     # print myTree
@@ -136,3 +136,10 @@ if __name__ == "__main__":
 
     storeTree(myTree, 'classifierStorage.txt')
     print grabTree('classifierStorage.txt')
+
+    fr = open('lenses.txt')
+    lenses = [inst.strip().split("\t") for inst in fr.readlines()]
+    lensesLabels = ['age', 'prescript', 'astigmatic', 'tearRate']
+    lensesTree = createTree(lenses, lensesLabels)
+    print lensesTree
+    createPlot(lensesTree)
