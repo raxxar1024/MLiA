@@ -91,11 +91,48 @@ def createTree(dataSet, labels):
     return myTree
 
 
+def classify(inputTree, featLabels, testVec):
+    firstStr = inputTree.keys()[0]
+    secondDict = inputTree[firstStr]
+
+    featIndex = featLabels.index(firstStr)
+    for key in secondDict.keys():
+        if testVec[featIndex] == key:
+            if type(secondDict[key]).__name__ == 'dict':
+                classLabel = classify(secondDict[key], featLabels, testVec)
+            else:
+                classLabel = secondDict[key]
+    return classLabel
+
+
+def storeTree(inputTree, filename):
+    import pickle
+    fw = open(filename, 'w')
+    pickle.dump(inputTree, fw)
+    fw.close()
+
+
+def grabTree(filename):
+    import pickle
+    fr = open(filename)
+    return pickle.load(fr)
+
+
 if __name__ == "__main__":
     myDat, labels = createDataSet()
     # print clacShannonEnt(myDat)
     # print splitDataSet(myDat, 0, 1)
     # print splitDataSet(myDat, 0, 0)
     # print chooseBestFeatureToSplit(myDat)
-    myTree = createTree(myDat, labels)
-    print myTree
+    # myTree = createTree(myDat, labels)
+    # print myTree
+
+    from treePlotter import retrieveTree
+    #
+    myTree = retrieveTree(0)
+    # print myTree
+    # print classify(myTree, labels, [1, 0])
+    # print classify(myTree, labels, [1, 1])
+
+    storeTree(myTree, 'classifierStorage.txt')
+    print grabTree('classifierStorage.txt')
