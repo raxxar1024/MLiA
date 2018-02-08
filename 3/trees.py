@@ -134,8 +134,8 @@ if __name__ == "__main__":
     # print classify(myTree, labels, [1, 0])
     # print classify(myTree, labels, [1, 1])
 
-    storeTree(myTree, 'classifierStorage.txt')
-    print grabTree('classifierStorage.txt')
+    # storeTree(myTree, 'classifierStorage.txt')
+    # print grabTree('classifierStorage.txt')
 
     fr = open('lenses.txt')
     lenses = [inst.strip().split("\t") for inst in fr.readlines()]
