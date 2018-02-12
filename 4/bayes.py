@@ -158,6 +158,32 @@ def localWords(feed1, feed0):
         fullText.extend(wordList)
         classList.append(0)
 
+    vocabList = createVocabList(docList)
+    top30words = calcMostFreq(vocabList, fullText)
+    for pairW in top30words:
+        if pairW[0] in vocabList:
+            vocabList.remove(pairW[0])
+    trainingSet = range(2 * minLen)
+    testSet = []
+    for i in range(20):
+        randIndex = int(random.uniform(0, len(trainingSet)))
+        testSet.append(trainingSet[randIndex])
+        del (trainingSet[randIndex])
+
+    trainMat = []
+    trainclasses = []
+    for docIndex in trainingSet:
+        trainMat.append(bagOfWords2VecMN(vocabList, docList[docIndex]))
+        trainclasses.append(classList[docIndex])
+    p0V, p1V, pSpam = trainNB0(array(trainMat), array(trainclasses))
+    errorCount = 0
+    for docIndex in testSet:
+        wordVector = bagOfWords2VecMN(vocabList, docList[docIndex])
+        if classifyNB(array(wordVector), p0V, p1V, pSpam) != classList[docIndex]:
+            errorCount += 1
+    print 'the error rate is: ', float(errorCount) / len(testSet)
+    return vocabList, p0V, p1V
+
 
 if __name__ == "__main__":
     # listOPosts, listClasses = loadDataSet()
@@ -177,4 +203,11 @@ if __name__ == "__main__":
 
     # testingNB()
 
-    spamTest()
+    # spamTest()
+
+    import feedparser
+
+    ny = feedparser.parse('http://newyork.craigslist.org/stp/index.rss')
+    sf = feedparser.parse('http://sfbay.craigslist.org/stp/index.rss')
+    vocabList, pSF, pNY = localWords(ny, sf)
+    vocabList, pSF, pNY = localWords(ny, sf)
