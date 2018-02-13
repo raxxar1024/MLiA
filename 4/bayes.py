@@ -91,8 +91,8 @@ def testingNB():
 
 def textParse(bigString):
     import re
-    listOfTokens = re.split(r'\\W*', bigString)
-    return [tok.lower() for tok in listOfTokens if len(tok) > 0]
+    listOfTokens = re.split(r'\W*', bigString)
+    return [tok.lower() for tok in listOfTokens if len(tok) > 2]
 
 
 def spamTest():
@@ -185,6 +185,26 @@ def localWords(feed1, feed0):
     return vocabList, p0V, p1V
 
 
+def getTopWords(ny, sf):
+    import operator
+    vocabList, p0V, p1V = localWords(ny, sf)
+    topNY, topSF = [], []
+    for i in range(len(p0V)):
+        if p0V[i] > -6.0:
+            topSF.append((vocabList[i], p0V[i]))
+        if p1V[i] > -6.0:
+            topNY.append((vocabList[i], p1V[i]))
+
+    sortedSF = sorted(topSF, key=lambda pair: pair[1], reverse=True)
+    print "SF**SF**SF**SF**SF**SF**"
+    for item in sortedSF:
+        print item[0]
+    sortedNY = sorted(topNY, key=lambda pair: pair[1], reverse=True)
+    print "NY**NY**NY**NY**NY**NY**"
+    for item in sortedNY:
+        print item[0]
+
+
 if __name__ == "__main__":
     # listOPosts, listClasses = loadDataSet()
     # myVocabList = createVocabList(listOPosts)
@@ -209,5 +229,6 @@ if __name__ == "__main__":
 
     ny = feedparser.parse('http://newyork.craigslist.org/stp/index.rss')
     sf = feedparser.parse('http://sfbay.craigslist.org/stp/index.rss')
-    vocabList, pSF, pNY = localWords(ny, sf)
-    vocabList, pSF, pNY = localWords(ny, sf)
+    # vocabList, pSF, pNY = localWords(ny, sf)
+    # vocabList, pSF, pNY = localWords(ny, sf)
+    getTopWords(ny, sf)
