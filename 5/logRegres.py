@@ -57,7 +57,22 @@ def plotBestFit(weights):
     plt.show()
 
 
+def stocGradAscent0(dataMatrix, classLabels):
+    m, n = shape(dataMatrix)
+    alpha = 0.01
+    weights = ones(n)
+    for i in range(m):
+        h = sigmoid(sum(dataMatrix[i] * weights))
+        error = classLabels[i] - h
+        weights += alpha * error * dataMatrix[i]
+    return weights
+
+
 if __name__ == "__main__":
     dataArr, labelMat = loadDataSet()
-    weights = gradAscent(dataArr, labelMat)
-    plotBestFit(weights.getA())
+
+    # weights = gradAscent(dataArr, labelMat)
+    # plotBestFit(weights.getA())
+
+    weights = stocGradAscent0(array(dataArr), labelMat)
+    plotBestFit(weights)
