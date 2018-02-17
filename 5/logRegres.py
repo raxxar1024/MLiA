@@ -82,6 +82,14 @@ def stocGradAscent1(dataMatrix, classLabels, numIter=150):
     return weights
 
 
+def classifyVector(inX, weights):
+    prob = sigmoid(sum(inX * weights))
+    if prob > 0.5:
+        return 1.0
+    else:
+        return 0.0
+
+
 if __name__ == "__main__":
     dataArr, labelMat = loadDataSet()
 
