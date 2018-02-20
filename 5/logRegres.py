@@ -117,6 +117,14 @@ def colicTest():
     return errorRate
 
 
+def multiTest():
+    numTests = 10
+    errorSum = 0.0
+    for k in range(numTests):
+        errorSum += colicTest()
+    print "after %d interations the average error rate is: %f" % (numTests, errorSum / float(numTests))
+
+
 if __name__ == "__main__":
     dataArr, labelMat = loadDataSet()
 
