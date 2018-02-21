@@ -126,11 +126,13 @@ def multiTest():
 
 
 if __name__ == "__main__":
-    dataArr, labelMat = loadDataSet()
+    # dataArr, labelMat = loadDataSet()
 
     # weights = gradAscent(dataArr, labelMat)
     # plotBestFit(weights.getA())
 
     # weights = stocGradAscent0(array(dataArr), labelMat)
-    weights = stocGradAscent1(array(dataArr), labelMat)
-    plotBestFit(weights)
+    # weights = stocGradAscent1(array(dataArr), labelMat)
+    # plotBestFit(weights)
+
+    multiTest()
