@@ -87,6 +87,18 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
     return b, alphas
 
 
+class optStruct:
+    def __init__(self, dataMatIn, classLables, C, toler):
+        self.X = dataMatIn
+        self.labelMat = classLables
+        self.C = C
+        self.tol = toler
+        self.m = shape(zeros((self.m, 1)))
+        self.alphas = mat(zeros((self.m, 1)))
+        self.b = 0
+        self.eCache = mat(zeros((self.m, 2)))  # 误差缓存
+
+
 if __name__ == "__main__":
     dataArr, labelArr = loadDataSet('testSet.txt')
     b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
