@@ -99,10 +99,33 @@ class optStruct:
         self.eCache = mat(zeros((self.m, 2)))  # 误差缓存
 
 
-def clacEk(oS, k):
+def calcEk(oS, k):
     fXk = float(multiply(oS.alphas, oS.labelMat).T * (oS.X * oS.X[k, :].T) + oS.b)
     Ek = fXk - float(oS.labelMat[k])
     return Ek
+
+
+def selectJ(i, oS, Ei):
+    maxK = -1
+    maxDeltaE = 0
+    Ej = 0
+    oS.eCache[i] = [1, Ei]
+    validEcacheList = nonzero(oS.eCache[:, 0].A)[0]
+    if len(validEcacheList) > 1:
+        for k in validEcacheList:
+            if k == i:
+                continue
+            Ek = calcEk(oS, k)
+            deltaE = abs(Ei - Ek)
+            if deltaE > maxDeltaE:
+                maxK = k
+                maxDeltaE = deltaE
+                Ej = Ek
+        return maxK, Ej
+    else:
+        j = selectJrand(i, os.m)
+        Ej = calcEk(oS, j)
+    return j, Ej
 
 
 if __name__ == "__main__":
