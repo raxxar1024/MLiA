@@ -128,6 +128,11 @@ def selectJ(i, oS, Ei):
     return j, Ej
 
 
+def updateEk(oS, k):
+    Ek = calcEk(oS, k)
+    os.eCache[k] = [1, Ek]
+
+
 if __name__ == "__main__":
     dataArr, labelArr = loadDataSet('testSet.txt')
     b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
