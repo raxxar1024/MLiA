@@ -92,7 +92,7 @@ class optStruct:
         self.labelMat = classLables
         self.C = C
         self.tol = toler
-        self.m = shape(zeros((self.m, 1)))
+        self.m = shape(dataMatIn)[0]
         self.alphas = mat(zeros((self.m, 1)))
         self.b = 0
         self.eCache = mat(zeros((self.m, 2)))  # 误差缓存
@@ -122,7 +122,7 @@ def selectJ(i, oS, Ei):
                 Ej = Ek
         return maxK, Ej
     else:
-        j = selectJrand(i, os.m)
+        j = selectJrand(i, oS.m)
         Ej = calcEk(oS, j)
     return j, Ej
 
@@ -134,13 +134,13 @@ def updateEk(oS, k):
 
 def innerL(i, oS):
     Ei = calcEk(oS, i)
-    if (os.labelMat[i] * Ei < -oS.tol and oS.alphas[i] < oS.C) or (oS.labelMat[i] * Ei > oS.tol and oS.alphas[i]):
+    if (oS.labelMat[i] * Ei < -oS.tol and oS.alphas[i] < oS.C) or (oS.labelMat[i] * Ei > oS.tol and oS.alphas[i] > 0):
         j, Ej = selectJ(i, oS, Ei)
         alphaIold = oS.alphas[i].copy()
-        alphaJold = os.alphas[j].copy()
-        if os.labelMat[i] != oS.labelMat[j]:
+        alphaJold = oS.alphas[j].copy()
+        if oS.labelMat[i] != oS.labelMat[j]:
             L = max(0, oS.alphas[j] - oS.alphas[i])
-            H = min(oS.c, os.C + os.alphas[j], oS.alphas[i])
+            H = min(oS.C, oS.C + oS.alphas[j], oS.alphas[i])
         else:
             L = max(0, oS.alphas[j] + oS.alphas[i] - oS.C)
             H = min(oS.C, oS.alphas[j] + oS.alphas[i])
@@ -181,12 +181,12 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
     iter = 0
     entireSet = True
     alphaPairsChanged = 0
-    while iter < maxIter and alphaPairsChanged > 0:
+    while iter < maxIter and (alphaPairsChanged > 0 or entireSet):
         alphaPairsChanged = 0
         if entireSet:
             for i in range(oS.m):
                 alphaPairsChanged += innerL(i, oS)
-            print "fullSet, iter: %d, pairs change %d" % (iter, i, alphaPairsChanged)
+                print "fullSet, iter: %d i:%d, pairs changed %d" % (iter,i,alphaPairsChanged)
             iter += 1
         else:
             nonBoundIs = nonzero((oS.alphas.A > 0) * (oS.alphas.A < C))[0]
@@ -204,6 +204,7 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
 
 if __name__ == "__main__":
     dataArr, labelArr = loadDataSet('testSet.txt')
-    b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
+    # b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
+    b, alphas = smoP(dataArr, labelArr, 0.6, 0.001, 40)
     print b
     print alphas[alphas > 0]
