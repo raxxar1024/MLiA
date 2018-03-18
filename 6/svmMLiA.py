@@ -186,7 +186,7 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
         if entireSet:
             for i in range(oS.m):
                 alphaPairsChanged += innerL(i, oS)
-                print "fullSet, iter: %d i:%d, pairs changed %d" % (iter,i,alphaPairsChanged)
+                print "fullSet, iter: %d i:%d, pairs changed %d" % (iter, i, alphaPairsChanged)
             iter += 1
         else:
             nonBoundIs = nonzero((oS.alphas.A > 0) * (oS.alphas.A < C))[0]
@@ -200,6 +200,16 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
             entireSet = True
         print "iteration number: %d" % iter
     return oS.b, oS.alphas
+
+
+def calcWs(alphas, dataArr, classLabels):
+    X = mat(dataArr)
+    labelMat = mat(classLabels).transpose()
+    m, n = shape(X)
+    w = zeros((n, 1))
+    for i in range(m):
+        w += multiply(alphas[i] * labelMat[i], X[i, :].T)
+    return w
 
 
 if __name__ == "__main__":
