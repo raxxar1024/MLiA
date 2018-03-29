@@ -3,13 +3,13 @@
 from numpy import *
 
 
-def loadDataSet(filename):
+def loadDataSet(fileName):
     dataMat, labelMat = [], []
-    fr = open(filename)
+    fr = open(fileName)
     for line in fr.readlines():
-        lineArr = line.strip().split()
-        dataMat.append([1.0, float(lineArr[0]), float(lineArr[1])])
-        labelMat.append(int(lineArr[2]))
+        lineArr = line.strip().split('\t')
+        dataMat.append([float(lineArr[0]), float(lineArr[1])])
+        labelMat.append(float(lineArr[2]))
     return dataMat, labelMat
 
 
@@ -129,7 +129,7 @@ def selectJ(i, oS, Ei):
 
 def updateEk(oS, k):
     Ek = calcEk(oS, k)
-    os.eCache[k] = [1, Ek]
+    oS.eCache[k] = [1, Ek]
 
 
 def innerL(i, oS):
@@ -140,7 +140,7 @@ def innerL(i, oS):
         alphaJold = oS.alphas[j].copy()
         if oS.labelMat[i] != oS.labelMat[j]:
             L = max(0, oS.alphas[j] - oS.alphas[i])
-            H = min(oS.C, oS.C + oS.alphas[j], oS.alphas[i])
+            H = min(oS.C, oS.C + oS.alphas[j] - oS.alphas[i])
         else:
             L = max(0, oS.alphas[j] + oS.alphas[i] - oS.C)
             H = min(oS.C, oS.alphas[j] + oS.alphas[i])
@@ -152,25 +152,25 @@ def innerL(i, oS):
             print "eta>=0"
             return 0
         oS.alphas[j] -= oS.labelMat[j] * (Ei - Ej) / eta
-        os.alphas[j] = clipAlpha(oS.alphas[j], H, L)
+        oS.alphas[j] = clipAlpha(oS.alphas[j], H, L)
 
         updateEk(oS, j)
         if abs(oS.alphas[j] - alphaJold) < 0.00001:
             print "j not moving enough"
             return 0
-        oS.alphas[i] += oS.labelMat[j] * oS.lableMat[i] * (alphaJold - oS.alphas[j])
+        oS.alphas[i] += oS.labelMat[j] * oS.labelMat[i] * (alphaJold - oS.alphas[j])
 
         updateEk(oS, i)
         b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[i, :].T \
              - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[i, :] * oS.X[j, :].T
         b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[j, :].T \
              - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[j, :] * oS.X[j, :].T
-        if 0 < oS.alphas[i] and oS.C > os.alphas[i]:
-            os.b = b1
-        elif 0 < os.alphas[j] and oS.C > oS.alphas[j]:
+        if 0 < oS.alphas[i] and oS.C > oS.alphas[i]:
+            oS.b = b1
+        elif 0 < oS.alphas[j] and oS.C > oS.alphas[j]:
             oS.b = b2
         else:
-            os.b = (b1 + b2) / 2.0
+            oS.b = (b1 + b2) / 2.0
         return 1
     else:
         return 0
@@ -193,7 +193,7 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
             for i in nonBoundIs:
                 alphaPairsChanged += innerL(i, oS)
                 print "non-bound, iter: %d i:%d, pairs changed %d" % (iter, i, alphaPairsChanged)
-                iter += 1
+            iter += 1
         if entireSet:
             entireSet = False
         elif alphaPairsChanged == 0:
@@ -216,16 +216,10 @@ if __name__ == "__main__":
     dataArr, labelArr = loadDataSet('testSet.txt')
     # b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
     b, alphas = smoP(dataArr, labelArr, 0.6, 0.001, 40)
-    print b
-    print alphas[alphas > 0]
+    # print dataArr
+    # print b
+    # print alphas
+    # print alphas[alphas > 0]
 
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
+    ws = calcWs(alphas, dataArr, labelArr)
+    print ws
