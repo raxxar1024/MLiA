@@ -212,6 +212,22 @@ def calcWs(alphas, dataArr, classLabels):
     return w
 
 
+def kernelTrans(X, A, kTup):
+    m, n = shape(X)
+    K = mat(zeros((m, 1)))
+    if kTup[0] == 'lin':
+        K = X * A.T
+    elif kTup[0] == 'rbf':
+        for j in range(m):
+            deltaRow = X[j, :] - A
+            K[j] = deltaRow * deltaRow.T
+        # 元素间除法
+        K = exp(K / (-1 * kTup[1] ** 2))
+    else:
+        raise NameError('Houston We Have a Problem -- That Kernal is not recognized')
+    return K
+
+
 if __name__ == "__main__":
     dataArr, labelArr = loadDataSet('testSet.txt')
     # b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
@@ -223,4 +239,3 @@ if __name__ == "__main__":
 
     ws = calcWs(alphas, dataArr, labelArr)
     print ws
-
