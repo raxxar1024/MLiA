@@ -87,15 +87,18 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
 
 
 class optStruct:
-    def __init__(self, dataMatIn, classLables, C, toler):
+    def __init__(self, dataMatIn, classLabels, C, toler, kTup):
         self.X = dataMatIn
-        self.labelMat = classLables
+        self.labelMat = classLabels
         self.C = C
         self.tol = toler
         self.m = shape(dataMatIn)[0]
         self.alphas = mat(zeros((self.m, 1)))
         self.b = 0
         self.eCache = mat(zeros((self.m, 2)))  # 误差缓存
+        self.K = mat(zeros((self.m, self.m)))
+        for i in range(self.m):
+            self.K[:, i] = kernelTrans(self.X, self.X[i, :], kTup)
 
 
 def calcEk(oS, k):
@@ -212,6 +215,22 @@ def calcWs(alphas, dataArr, classLabels):
     return w
 
 
+def kernelTrans(X, A, kTup):
+    m, n = shape(X)
+    K = mat(zeros((m, 1)))
+    if kTup[0] == 'lin':
+        K = X * A.T
+    elif kTup[0] == 'rbf':
+        for j in range(m):
+            deltaRow = X[j, :] - A
+            K[j] = deltaRow * deltaRow.T
+        # 元素间除法
+        K = exp(K / (-1 * kTup[1] ** 2))
+    else:
+        raise NameError('Houston We Have a Problem -- That Kernal is not recognized')
+    return K
+
+
 if __name__ == "__main__":
     dataArr, labelArr = loadDataSet('testSet.txt')
     # b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
@@ -223,5 +242,8 @@ if __name__ == "__main__":
 
     ws = calcWs(alphas, dataArr, labelArr)
     print ws
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 761be7091c5cd43734c7ce62b9930f555c4c04a5
