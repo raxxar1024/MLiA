@@ -242,8 +242,3 @@ if __name__ == "__main__":
 
     ws = calcWs(alphas, dataArr, labelArr)
     print ws
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 761be7091c5cd43734c7ce62b9930f555c4c04a5
