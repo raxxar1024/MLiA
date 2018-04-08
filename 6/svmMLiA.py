@@ -102,7 +102,7 @@ class optStruct:
 
 
 def calcEk(oS, k):
-    fXk = float(multiply(oS.alphas, oS.labelMat).T * (oS.X * oS.X[k, :].T) + oS.b)
+    fXk = float(multiply(oS.alphas, oS.labelMat).T * (oS.K[;, k]) + oS.b)
     Ek = fXk - float(oS.labelMat[k])
     return Ek
 
@@ -150,7 +150,8 @@ def innerL(i, oS):
         if L == H:
             print "L==H"
             return 0
-        eta = 2.0 * oS.X[i, :] * oS.X[j, :].T - oS.X[i, :] * oS.X[i, :].T - oS.X[j, :] * oS.X[j, :].T
+        # eta = 2.0 * oS.X[i, :] * oS.X[j, :].T - oS.X[i, :] * oS.X[i, :].T - oS.X[j, :] * oS.X[j, :].T
+        eta = 2.0 * oS.K[i, j] - oS.K[i, i] - oS.K[j, j]
         if eta >= 0:
             print "eta>=0"
             return 0
@@ -164,13 +165,19 @@ def innerL(i, oS):
         oS.alphas[i] += oS.labelMat[j] * oS.labelMat[i] * (alphaJold - oS.alphas[j])
 
         updateEk(oS, i)
-        b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[i, :].T \
-             - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[i, :] * oS.X[j, :].T
-        b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[j, :].T \
-             - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[j, :] * oS.X[j, :].T
-        if 0 < oS.alphas[i] and oS.C > oS.alphas[i]:
+
+        # b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[i, :].T \
+        #      - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[i, :] * oS.X[j, :].T
+        # b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[j, :].T \
+        #      - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[j, :] * oS.X[j, :].T
+        b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i, i] - oS.labelMat[j] * (
+            oS.alphas[j] - alphaJold) * oS.K[i, j]
+        b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i, j] - oS.labelMat[j] * (
+            oS.alphas[j] - alphaJold) * oS.K[j, j]
+
+        if 0 < oS.alphas[i] < oS.C:
             oS.b = b1
-        elif 0 < oS.alphas[j] and oS.C > oS.alphas[j]:
+        elif 0 < oS.alphas[j] < oS.C:
             oS.b = b2
         else:
             oS.b = (b1 + b2) / 2.0
@@ -242,5 +249,3 @@ if __name__ == "__main__":
 
     ws = calcWs(alphas, dataArr, labelArr)
     print ws
-
-	
