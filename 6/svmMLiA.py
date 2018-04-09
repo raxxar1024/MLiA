@@ -249,3 +249,4 @@ if __name__ == "__main__":
 
     ws = calcWs(alphas, dataArr, labelArr)
     print ws
+
