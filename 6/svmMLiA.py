@@ -102,7 +102,7 @@ class optStruct:
 
 
 def calcEk(oS, k):
-    fXk = float(multiply(oS.alphas, oS.labelMat).T * (oS.K[;, k]) + oS.b)
+    fXk = float(multiply(oS.alphas, oS.labelMat).T * (oS.K[:, k]) + oS.b)
     Ek = fXk - float(oS.labelMat[k])
     return Ek
 
