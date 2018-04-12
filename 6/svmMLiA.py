@@ -187,7 +187,7 @@ def innerL(i, oS):
 
 
 def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
-    oS = optStruct(mat(dataMatIn), mat(classLabels).transpose(), C, toler)
+    oS = optStruct(mat(dataMatIn), mat(classLabels).transpose(), C, toler, kTup)
     iter = 0
     entireSet = True
     alphaPairsChanged = 0
@@ -240,7 +240,7 @@ def kernelTrans(X, A, kTup):
 
 def testRbf(k1=1.3):
     dataArr, labelArr = loadDataSet('testSetRBF.txt')
-    b, alphas = smoP(dataArr, labelArr, 200, 0.0001, 10000, ('rbf, k1'))
+    b, alphas = smoP(dataArr, labelArr, 200, 0.0001, 10000, ('rbf', k1))
     datMat = mat(dataArr)
     labelMat = mat(labelArr).transpose()
     svInd = nonzero(alphas.A > 0)[0]
@@ -270,13 +270,15 @@ def testRbf(k1=1.3):
 
 
 if __name__ == "__main__":
-    dataArr, labelArr = loadDataSet('testSet.txt')
+    # dataArr, labelArr = loadDataSet('testSet.txt')
     # b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
-    b, alphas = smoP(dataArr, labelArr, 0.6, 0.001, 40)
+    # b, alphas = smoP(dataArr, labelArr, 0.6, 0.001, 40)
     # print dataArr
     # print b
     # print alphas
     # print alphas[alphas > 0]
 
-    ws = calcWs(alphas, dataArr, labelArr)
-    print ws
+    # ws = calcWs(alphas, dataArr, labelArr)
+    # print ws
+
+    testRbf()
