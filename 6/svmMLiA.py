@@ -269,6 +269,16 @@ def testRbf(k1=1.3):
     print "the test error rate is %f" % (float(errorCount) / m)
 
 
+def img2vector(filename):
+    returnVector = zeros((1, 1024))
+    fr = open(filename)
+    for i in xrange(32):
+        lineStr = fr.readline()
+        for j in xrange(32):
+            returnVector[0, 32 * i + j] = int(lineStr[j])
+    return returnVector
+
+
 if __name__ == "__main__":
     # dataArr, labelArr = loadDataSet('testSet.txt')
     # b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
