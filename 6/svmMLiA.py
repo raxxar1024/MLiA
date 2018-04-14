@@ -1,6 +1,7 @@
 # !/usr/bin/python
 # -*- coding=utf-8 -*-
-from numpy import *
+# from numpy import *
+from numpy import zeros, multiply
 
 
 def loadDataSet(fileName):
@@ -277,6 +278,24 @@ def img2vector(filename):
         for j in xrange(32):
             returnVector[0, 32 * i + j] = int(lineStr[j])
     return returnVector
+
+
+def loadImages(dirName):
+    from os import listdir
+    hwLabels = []
+    trainingFileList = listdir(dirName)
+    m = len(trainingFileList)
+    trainingMat = zeros((m, 1024))
+    for i in range(m):
+        fileNameStr = trainingFileList[i]
+        fileStr = fileNameStr.split(".")[0]
+        classNumStr = int(fileStr.split("_")[0])
+        if classNumStr == 9:
+            hwLabels.append(-1)
+        else:
+            hwLabels.append(1)
+        trainingMat[i, :] = img2vector('%s/%s' % (dirName, fileNameStr))
+    return trainingMat, hwLabels
 
 
 if __name__ == "__main__":
