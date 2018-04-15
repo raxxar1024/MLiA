@@ -1,7 +1,7 @@
 # !/usr/bin/python
 # -*- coding=utf-8 -*-
 # from numpy import *
-from numpy import zeros, multiply
+from numpy import *
 
 
 def loadDataSet(fileName):
@@ -296,6 +296,37 @@ def loadImages(dirName):
             hwLabels.append(1)
         trainingMat[i, :] = img2vector('%s/%s' % (dirName, fileNameStr))
     return trainingMat, hwLabels
+
+
+def testDigits(kTup=('rbf', 10)):
+    dataArr, labelArr = loadImages("trainingDigits")
+    b, alphas = smoP(dataArr, labelArr, 200, 0.0001, 10000, kTup)
+    dataMat = mat(dataArr)
+    labelMat = mat(labelArr).transpose()
+    svInd = nonzero(alphas.A > 0)[0]
+    sVs = dataMat[svInd]
+    labelSV = labelMat[svInd]
+    print "there are %d Support Vectors" % shape(sVs)[0]
+    m, n = shape(dataMat)
+    errorCount = 0
+    for i in range(m):
+        kernekEval = kernelTrans(sVs, dataMat[i, :], kTup)
+        predict = kernekEval.T * multiply(labelSV, alphas[svInd], ) + b
+        if sign(predict) != sign(labelArr[i]):
+            errorCount += 1
+    print "the training error rate is: %f" % (float(errorCount) / m)
+
+    dataArr, labelArr = loadImages("testDigits")
+    errorCount = 0
+    dataMat = mat(dataArr)
+    labelMat = mat(labelArr).transpose()
+    m, n = shape(dataMat)
+    for i in range(m):
+        kernelEval = kernelTrans(sVs, dataMat[i, :], kTup)
+        predict = kernekEval.T * multiply(labelSV, alphas[svInd]) + b
+        if sign(predict) != sign(labelArr[i]):
+            errorCount += 1
+    print "the test error rate is %f" % (float(errorCount) / m)
 
 
 if __name__ == "__main__":
