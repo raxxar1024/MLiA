@@ -16,3 +16,4 @@ def loadSimpData():
 
 if __name__ == "__main__":
     datMat, classLabels = loadSimpData()
+
