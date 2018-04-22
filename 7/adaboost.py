@@ -15,7 +15,7 @@ def loadSimpData():
 
 
 def stumpClassify(dataMatrix, dimen, threshVal, threshIneq):
-    retArray = ones((shape(dataMatrix[0], 1)))
+    retArray = ones((shape(dataMatrix)[0], 1))
     if threshIneq == "lt":
         retArray[dataMatrix[:, dimen] <= threshVal] = -1.0
     else:
@@ -44,7 +44,7 @@ def buildStump(dataArr, classLabels, D):
                 weightedError = D.T * errArr
                 # 计算加权错误率
                 print "split: dim %d, thresh %.2f, thresh ineqal: %s, thr weighted error is %.3f" % (
-                i, threshVal, inequal, weightedError)
+                    i, threshVal, inequal, weightedError)
                 if weightedError < minError:
                     minError = weightedError
                     bestClasEst = predictedVals.copy()
@@ -56,3 +56,5 @@ def buildStump(dataArr, classLabels, D):
 
 if __name__ == "__main__":
     datMat, classLabels = loadSimpData()
+    D = mat(ones((5, 1)) / 5)
+    buildStump(datMat, classLabels, D)
