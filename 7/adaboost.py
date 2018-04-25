@@ -58,4 +58,6 @@ if __name__ == "__main__":
     datMat, classLabels = loadSimpData()
     D = mat(ones((5, 1)) / 5)
     buildStump(datMat, classLabels, D)
-    
+ 
+
+ 
