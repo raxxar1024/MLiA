@@ -81,6 +81,20 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
     return weakClassArr
 
 
+def adaClassify(datToClass, classifierArr):
+    dataMatrix = mat(datToClass)
+    m = shape(dataMatrix[0])
+    aggclassEst = mat(zeros((m, 1)))
+    for i in range(len(classifierArr)):
+        classEst = stumpClassify(dataMatrix,
+                                 classifierArr[i]['dim'],
+                                 classifierArr[i]['thresh'],
+                                 classifierArr[i]['ineq'])
+        aggclassEst += classifierArr[i]['alpha'] * classEst
+        print aggclassEst
+    return sign(aggclassEst)
+
+
 if __name__ == "__main__":
     datMat, classLabels = loadSimpData()
     D = mat(ones((5, 1)) / 5)
