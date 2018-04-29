@@ -101,3 +101,4 @@ if __name__ == "__main__":
     buildStump(datMat, classLabels, D)
 
     classifierArray = adaBoostTrainDS(datMat, classLabels, 9)
+    print classifierArray
