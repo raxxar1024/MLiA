@@ -102,4 +102,5 @@ if __name__ == "__main__":
 
     classifierArray = adaBoostTrainDS(datMat, classLabels, 9)
     print classifierArray
+
 	
