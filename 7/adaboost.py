@@ -43,8 +43,8 @@ def buildStump(dataArr, classLabels, D):
                 errArr[predictedVals == labelMat] = 0
                 weightedError = D.T * errArr
                 # 计算加权错误率
-                # print "split: dim %d, thresh %.2f, thresh ineqal: %s, thr weighted error is %.3f" % (
-                #     i, threshVal, inequal, weightedError)
+                print "split: dim %d, thresh %.2f, thresh ineqal: %s, thr weighted error is %.3f" % (
+                    i, threshVal, inequal, weightedError)
                 if weightedError < minError:
                     minError = weightedError
                     bestClasEst = predictedVals.copy()
@@ -83,7 +83,7 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
 
 def adaClassify(datToClass, classifierArr):
     dataMatrix = mat(datToClass)
-    m = shape(dataMatrix[0])
+    m = shape(dataMatrix)[0]
     aggclassEst = mat(zeros((m, 1)))
     for i in range(len(classifierArr)):
         classEst = stumpClassify(dataMatrix,
@@ -100,7 +100,9 @@ if __name__ == "__main__":
     D = mat(ones((5, 1)) / 5)
     buildStump(datMat, classLabels, D)
 
-    classifierArray = adaBoostTrainDS(datMat, classLabels, 9)
-    print classifierArray
+    # classifierArray = adaBoostTrainDS(datMat, classLabels, 9)
+    # print classifierArray
 
-	
+    datArr, labelArr = loadSimpData()
+    classifierArr = adaBoostTrainDS(datMat, labelArr, 30)
+    print adaClassify([0, 0], classifierArr)
