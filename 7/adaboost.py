@@ -100,9 +100,9 @@ if __name__ == "__main__":
     D = mat(ones((5, 1)) / 5)
     buildStump(datMat, classLabels, D)
 
-    # classifierArray = adaBoostTrainDS(datMat, classLabels, 9)
-    # print classifierArray
+    classifierArray = adaBoostTrainDS(datMat, classLabels, 9)
+    print classifierArray
 
-    datArr, labelArr = loadSimpData()
-    classifierArr = adaBoostTrainDS(datMat, labelArr, 30)
-    print adaClassify([0, 0], classifierArr)
+    # datArr, labelArr = loadSimpData()
+    # classifierArr = adaBoostTrainDS(datMat, labelArr, 30)
+    # print adaClassify([0, 0], classifierArr)
