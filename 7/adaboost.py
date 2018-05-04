@@ -106,3 +106,4 @@ if __name__ == "__main__":
     # datArr, labelArr = loadSimpData()
     # classifierArr = adaBoostTrainDS(datMat, labelArr, 30)
     # print adaClassify([0, 0], classifierArr)
+
