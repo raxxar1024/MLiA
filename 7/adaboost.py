@@ -19,7 +19,7 @@ def stumpClassify(dataMatrix, dimen, threshVal, threshIneq):
     if threshIneq == "lt":
         retArray[dataMatrix[:, dimen] <= threshVal] = -1.0
     else:
-        retArray[dataMatrix[:, dimen] > threshVal] = 1.0
+        retArray[dataMatrix[:, dimen] > threshVal] = -1.0
     return retArray
 
 
@@ -43,8 +43,8 @@ def buildStump(dataArr, classLabels, D):
                 errArr[predictedVals == labelMat] = 0
                 weightedError = D.T * errArr
                 # 计算加权错误率
-                print "split: dim %d, thresh %.2f, thresh ineqal: %s, thr weighted error is %.3f" % (
-                    i, threshVal, inequal, weightedError)
+                # print "split: dim %d, thresh %.2f, thresh ineqal: %s, thr weighted error is %.3f" % (
+                #     i, threshVal, inequal, weightedError)
                 if weightedError < minError:
                     minError = weightedError
                     bestClasEst = predictedVals.copy()
@@ -61,18 +61,18 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
     aggClassEst = mat(zeros((m, 1)))
     for i in range(numIt):
         bestStump, error, classEst = buildStump(dataArr, classLabels, D)
-        print "D:", D.T
+        # print "D:", D.T
         alpha = float(0.5 * log((1.0 - error) / max(error, 1e-16)))
         bestStump['alpha'] = alpha
         weakClassArr.append(bestStump)
-        print "classEst: ", classEst.T
+        # print "classEst: ", classEst.T
         # （以下两行）为下一次迭代计算*D*
         expon = multiply(-1 * alpha * mat(classLabels).T, classEst)
         D = multiply(D, exp(expon))
         D = D / D.sum()
         # （以下五行）错误率累加计算
         aggClassEst += alpha * classEst
-        print "aggClassEst: ", aggClassEst.T
+        # print "aggClassEst: ", aggClassEst.T
         aggErrors = multiply(sign(aggClassEst) != mat(classLabels).T, ones((m, 1)))
         errRate = aggErrors.sum() / m
         print "total error: ", errRate, "\n"
@@ -100,13 +100,13 @@ def loadDataSet(fileName):
     dataMat = []
     labelMat = []
     fr = open(fileName)
-    for line in fr.readline():
+    for line in fr.readlines():
         lineArr = []
         curLine = line.strip().split("\t")
         for i in range(numFeat - 1):
             lineArr.append(float(curLine[i]))
-            dataMat.append(lineArr)
-            labelMat.append(float(curLine[-1]))
+        dataMat.append(lineArr)
+        labelMat.append(float(curLine[-1]))
     return dataMat, labelMat
 
 
@@ -118,7 +118,15 @@ if __name__ == "__main__":
     # classifierArray = adaBoostTrainDS(datMat, classLabels, 9)
     # print classifierArray
 
-    datArr, labelArr = loadSimpData()
-    classifierArr = adaBoostTrainDS(datArr, labelArr, 30)
-    print adaClassify([0, 0], classifierArr)
-    print adaClassify([[5, 5], [0, 0]], classifierArr)
+    # datArr, labelArr = loadSimpData()
+    # classifierArr = adaBoostTrainDS(datArr, labelArr, 30)
+    # print adaClassify([0, 0], classifierArr)
+    # print adaClassify([[5, 5], [0, 0]], classifierArr)
+
+    datArr, labelArr = loadDataSet('horseColicTraining2.txt')
+    classifierArray = adaBoostTrainDS(datArr, labelArr, 10)
+
+    testArr, testLabelArr = loadDataSet('horseColicTest2.txt')
+    prediction10 = adaClassify(testArr, classifierArray)
+    errArr = mat(ones((67, 1)))
+    print errArr[prediction10 != mat(testLabelArr).T].sum()
