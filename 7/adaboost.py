@@ -163,4 +163,3 @@ if __name__ == "__main__":
     # print errArr[prediction10 != mat(testLabelArr).T].sum()
 
     plotROC(aggClassEst.T, labelArr)
-	
