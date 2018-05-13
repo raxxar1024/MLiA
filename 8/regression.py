@@ -37,10 +37,12 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
     fig = plt.figure()
+    print "break here in case no tk ..."
     ax = fig.add_subplot(111)
     ax.scatter(xMat[:, 1].flatten().A[0], yMat.T[:, 0].flatten().A[0])
 
     xCopy = xMat.copy()
     xCopy.sort(0)
-    yHat = xCopy.ws
+    yHat = xCopy * ws
     ax.plot(xCopy[:, 1], yHat)
+    print "wait..."
