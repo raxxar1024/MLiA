@@ -54,6 +54,10 @@ def lwlrTest(testArr, xArr, yArr, k=1.0):
     return yHat
 
 
+def rssError(yArr, yHatArr):
+    return ((yArr - yHatArr) ** 2).sum()
+
+
 if __name__ == "__main__":
     xArr, yArr = loadDataSet('ex0.txt')
     # ws = standRegres(xArr, yArr)
