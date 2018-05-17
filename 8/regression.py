@@ -58,6 +58,31 @@ def rssError(yArr, yHatArr):
     return ((yArr - yHatArr) ** 2).sum()
 
 
+def ridgeRegres(xMat, yMat, lam=0.2):
+    xTx = xMat.T * xMat
+    denom = xTx + eye(shape(xMat)[1]) * lam
+    if linalg.det(denom) == 0.0:
+        print "This matrix is singular, cannot do inverse"
+        return
+    ws = denom.I * (xMat.T * yMat)
+
+
+def ridgeTest(xArr, yArr):
+    xMat, yMat = mat(xArr), mat(yArr).T
+    yMean = mean(yMat, 0)
+    # 数据标准化
+    yMat = yMat - yMean
+    xMeans = mean(xMat, 0)
+    xVar = var(xMat, 0)
+    xMat = (xMat - xMeans) / xVar
+    numTestPts = 30
+    wMat = zeros((numTestPts, shape(xMat)[1]))
+    for i in range(numTestPts):
+        ws = ridgeRegres(xMat, yMat, exp(i - 10))
+        wMat[i, :] = ws.T
+    return wMat
+
+
 if __name__ == "__main__":
     # xArr, yArr = loadDataSet('ex0.txt')
     # ws = standRegres(xArr, yArr)
