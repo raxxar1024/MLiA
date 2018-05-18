@@ -65,6 +65,7 @@ def ridgeRegres(xMat, yMat, lam=0.2):
         print "This matrix is singular, cannot do inverse"
         return
     ws = denom.I * (xMat.T * yMat)
+    return ws
 
 
 def ridgeTest(xArr, yArr):
@@ -100,21 +101,29 @@ if __name__ == "__main__":
     # ax.plot(xCopy[:, 1], yHat)
     # print "wait..."
 
+    # abX, abY = loadDataSet("abalone.txt")
+    # yHat01 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 0.1)
+    # yHat1 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 1)
+    # yHat10 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 10)
+    # print rssError(abY[0:99], yHat01.T), \
+    #     rssError(abY[0:99], yHat1.T), \
+    #     rssError(abY[0:99], yHat10.T)
+    #
+    # yHat01 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 0.1)
+    # yHat1 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 1)
+    # yHat10 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 10)
+    # print rssError(abY[100:199], yHat01.T), \
+    #     rssError(abY[100:199], yHat1.T), \
+    #     rssError(abY[100:199], yHat10.T)
+    #
+    # ws = standRegres(abX[0:99], abY[0:99])
+    # yHat = mat(abX[100:199]) * ws
+    # print rssError(abY[100:199], yHat.T.A)
+
     abX, abY = loadDataSet("abalone.txt")
-    yHat01 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 0.1)
-    yHat1 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 1)
-    yHat10 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 10)
-    print rssError(abY[0:99], yHat01.T), \
-        rssError(abY[0:99], yHat1.T), \
-        rssError(abY[0:99], yHat10.T)
+    ridgeWeights = ridgeTest(abX, abY)
 
-    yHat01 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 0.1)
-    yHat1 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 1)
-    yHat10 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 10)
-    print rssError(abY[100:199], yHat01.T), \
-        rssError(abY[100:199], yHat1.T), \
-        rssError(abY[100:199], yHat10.T)
-
-    ws = standRegres(abX[0:99], abY[0:99])
-    yHat = mat(abX[100:199]) * ws
-    print rssError(abY[100:199], yHat.T.A)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot(ridgeWeights)
+    plt.show()
