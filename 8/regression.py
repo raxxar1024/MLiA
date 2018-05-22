@@ -114,9 +114,9 @@ def stageWise(xArr, yArr, eps=0.01, numIt=100):
                 if rssE < lowestError:
                     lowestError = rssE
                     wsMax = wsTest
-            ws = wsMax.copy()
-            returnMat[i, :] = ws.T
-    return returnMat
+        ws = wsMax.copy()
+        # returnMat[i, :] = ws.T
+    # return returnMat
 
 
 if __name__ == "__main__":
@@ -155,10 +155,22 @@ if __name__ == "__main__":
     # yHat = mat(abX[100:199]) * ws
     # print rssError(abY[100:199], yHat.T.A)
 
-    abX, abY = loadDataSet("abalone.txt")
-    ridgeWeights = ridgeTest(abX, abY)
+    # abX, abY = loadDataSet("abalone.txt")
+    # ridgeWeights = ridgeTest(abX, abY)
+    #
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # ax.plot(ridgeWeights)
+    # plt.show()
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.plot(ridgeWeights)
-    plt.show()
+    xArr, yArr = loadDataSet("abalone.txt")
+    # print stageWise(xArr, yArr, 0.01, 200)
+    # print stageWise(xArr, yArr, 0.001, 5000)
+    xMat = mat(xArr)
+    yMat = mat(yArr).T
+    xMat = regularize(xMat)
+    yM = mean(yMat, 0)
+    yMat = yMat - yM
+    weights = standRegres(xMat, yMat.T)
+    print weights.T
+
