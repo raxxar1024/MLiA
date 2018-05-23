@@ -116,7 +116,7 @@ def stageWise(xArr, yArr, eps=0.01, numIt=100):
                     wsMax = wsTest
         ws = wsMax.copy()
         # returnMat[i, :] = ws.T
-    # return returnMat
+        # return returnMat
 
 
 if __name__ == "__main__":
@@ -173,4 +173,3 @@ if __name__ == "__main__":
     yMat = yMat - yM
     weights = standRegres(xMat, yMat.T)
     print weights.T
-
