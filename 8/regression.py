@@ -119,32 +119,31 @@ def stageWise(xArr, yArr, eps=0.01, numIt=100):
         # return returnMat
 
 
-from time import sleep
-import json
-import urllib2
+from bs4 import BeautifulSoup as bs
+import re
 
 
 def searchForSet(retX, retY, setNum, yr, numPce, origPrc):
-    sleep(10)
-    # myAPIstr = 'get from google.com'
-    searchURL = "lego/lego%d.html" % setNum
-    pg = urllib2.urlopen(searchURL)
-    retDict = json.loads(pg.read())
-    for i in range(len(retDict['items'])):
+    file_handle = open("lego/lego%d.html" % setNum, "r")
+    html_content = "\n".join(file.readlines(file_handle))
+    file_handle.close()
+    lst_search_result = bs(html_content, "lxml").find_all(class_="li")
+
+    for i in range(len(lst_search_result)):
         try:
-            currItem = retDict['items'][i]
-            if currItem['product']['condition'] == 'new':
+            if lst_search_result[i].find_all(text=re.compile("new|nisb")):
                 newFlag = 1
             else:
                 newFlag = 0
-            listOfInv = currItem['product']['inventories']
-            for item in listOfInv:
-                sellingPrice = item['price']
-                if sellingPrice > origPrc * 0.5:
-                    # 过滤掉不完整的套装
-                    print "%d\t%d\t%d\t%f\t%f" % (yr, numPce, newFlag, origPrc, sellingPrice)
-                    retX.append([yr, numPce, newFlag, origPrc])
-                    retY.append(sellingPrice)
+            sellingPrice = 0
+            for string in lst_search_result[i].find(class_="prc").stripped_strings:
+                if "$" in string:
+                    sellingPrice = float(string[1:])
+            if sellingPrice > origPrc * 0.5:
+                # 过滤掉不完整的套装
+                print "%d\t%d\t%d\t%f\t%f" % (yr, numPce, newFlag, origPrc, sellingPrice)
+                retX.append([yr, numPce, newFlag, origPrc])
+                retY.append(sellingPrice)
         except:
             print "problem with item %d" % i
 
@@ -156,6 +155,7 @@ def setDataCollect(retX, retY):
     searchForSet(retX, retY, 10181, 2007, 3428, 199.99)
     searchForSet(retX, retY, 10189, 2008, 5922, 299.99)
     searchForSet(retX, retY, 10196, 2009, 3263, 249.99)
+    print retX, retY
 
 
 if __name__ == "__main__":
