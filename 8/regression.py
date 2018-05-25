@@ -131,13 +131,14 @@ def searchForSet(retX, retY, setNum, yr, numPce, origPrc):
 
     for i in range(len(lst_search_result)):
         try:
-            if lst_search_result[i].find_all(text=re.compile("new|nisb")):
-                newFlag = 1
+            if lst_search_result[i].find_all(class_="vip", text=re.compile(r'new|nisb', re.I)):
+                newFlag = 1.0
             else:
-                newFlag = 0
-            sellingPrice = 0
+                newFlag = 0.0
+            sellingPrice = 0.0
             for string in lst_search_result[i].find(class_="prc").stripped_strings:
                 if "$" in string:
+                    string = "".join(string.split(","))
                     sellingPrice = float(string[1:])
             if sellingPrice > origPrc * 0.5:
                 # 过滤掉不完整的套装
