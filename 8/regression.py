@@ -156,7 +156,45 @@ def setDataCollect(retX, retY):
     searchForSet(retX, retY, 10181, 2007, 3428, 199.99)
     searchForSet(retX, retY, 10189, 2008, 5922, 299.99)
     searchForSet(retX, retY, 10196, 2009, 3263, 249.99)
-    print retX, retY
+    # print retX, retY
+
+
+def crossValidation(xArr, yArr, numVal=10):
+    m = len(yArr)
+    indexList = range(m)
+    errorMat = zeros((numVal, 30))
+    for i in range(numVal):
+        # （以下两行）创建训练集和测试集容器
+        trainX, trainY = [], []
+        testX, testY = [], []
+        random.shuffle(indexList)
+        for j in range(m):
+            if j < m * 0.9:
+                # （以下五行）数据分成训练集和测试集
+                trainX.append(xArr[indexList[j]])
+                trainY.append(yArr[indexList[j]])
+            else:
+                testX.append(xArr[indexList[j]])
+                testY.append(yArr[indexList[j]])
+        wMat = ridgeTest(trainX, trainY)
+        for k in range(30):
+            # （以下三行）用训练时的参数将测试数据标准化
+            matTestX, matTrainX = mat(testX), mat(trainX)
+            meanTrain = mean(matTrainX, 0)
+            varTrain = var(matTrainX, 0)
+            matTestX = (matTestX - meanTrain) / varTrain
+            yEst = matTestX * mat(wMat[k, :]).T + mean(trainY)
+            errorMat[i, k] = rssError(yEst.T.A, array(testY))
+    meanErrors = mean(errorMat, 0)
+    minMean = float(min(meanErrors))
+    bestWeights = wMat[nonzero(meanErrors == minMean)]
+    xMat, yMat = mat(xArr), mat(yArr).T
+    meanX = mean(xMat, 0)
+    varX = var(xMat, 0)
+    # （以下三行）数据还原
+    unReg = bestWeights / varX
+    print "the best model from Ridge Regression is: \n", unReg
+    print "with constant term: ", -1 * sum(multiply(meanX, unReg)) + mean(yMat)
 
 
 if __name__ == "__main__":
@@ -216,3 +254,14 @@ if __name__ == "__main__":
 
     lgX, lgY = [], []
     setDataCollect(lgX, lgY)
+    m, n = shape(lgX)
+    lgX1 = mat(ones((m, 5)))
+    lgX1[:, 1:5] = mat(lgX)
+    print lgX[0], lgX1[0]
+    ws = standRegres(lgX1, lgY)
+    print ws
+
+    print lgX1[0] * ws
+    print lgX1[-1] * ws
+    print lgX1[43] * ws
+    crossValidation(lgX, lgY, 10)
