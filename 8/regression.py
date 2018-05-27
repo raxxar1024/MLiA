@@ -127,7 +127,7 @@ def searchForSet(retX, retY, setNum, yr, numPce, origPrc):
     file_handle = open("lego/lego%d.html" % setNum, "r")
     html_content = "\n".join(file.readlines(file_handle))
     file_handle.close()
-    lst_search_result = bs(html_content, "lxml").find_all(class_="li")
+    lst_search_result = bs(html_content, "html.parser").find_all(class_="li")
 
     for i in range(len(lst_search_result)):
         try:
