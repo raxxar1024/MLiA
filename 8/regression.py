@@ -254,14 +254,13 @@ if __name__ == "__main__":
 
     lgX, lgY = [], []
     setDataCollect(lgX, lgY)
-    m, n = shape(lgX)
-    lgX1 = mat(ones((m, 5)))
-    lgX1[:, 1:5] = mat(lgX)
-    print lgX[0], lgX1[0]
-    ws = standRegres(lgX1, lgY)
-    print ws
-
-    print lgX1[0] * ws
-    print lgX1[-1] * ws
-    print lgX1[43] * ws
+    # m, n = shape(lgX)
+    # lgX1 = mat(ones((m, 5)))
+    # lgX1[:, 1:5] = mat(lgX)
+    # print lgX[0], lgX1[0]
+    # ws = standRegres(lgX1, lgY)
+    # print ws
+    # print lgX1[0] * ws
+    # print lgX1[-1] * ws
+    # print lgX1[43] * ws
     crossValidation(lgX, lgY, 10)
