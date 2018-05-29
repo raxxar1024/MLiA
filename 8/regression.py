@@ -203,6 +203,8 @@ if __name__ == "__main__":
     # xMat, yMat = mat(xArr), mat(yArr)
     # yHat = xMat * ws
     #
+    # print corrcoef(yHat.T, yMat)
+
     # fig = plt.figure()
     # print "break here in case no tk ..."
     # ax = fig.add_subplot(111)
