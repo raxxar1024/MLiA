@@ -28,6 +28,31 @@ def regErr(dataSet):
     return var(dataSet[:, -1]) * shape(dataSet)[0]
 
 
+def linearSolve(dataSet):
+    m, n = shape(dataSet)
+    # （以下两行）将X和Y中的数据格式化
+    X = mat(ones((m, n)))
+    # Y = mat(ones((m, 1)))
+    X[:, 1:n] = dataSet[:, 0:n - 1]
+    Y = mat(dataSet[:, -1])
+    xTx = X.T * X
+    if linalg.det(xTx) == 0.0:
+        raise NameError('This matrox is singular, cannot do inverse, try increasing the second value of ops')
+    ws = xTx.I * (X.T * Y)
+    return ws, X, Y
+
+
+def modelLeaf(dataSet):
+    ws, X, Y = linearSolve(dataSet)
+    return ws
+
+
+def modelErr(dataSet):
+    ws, X, Y = linearSolve(dataSet)
+    yHat = X * ws
+    return sum(power(Y - yHat, 2))
+
+
 def chooseBestSplit(dataSet, leafType=regLeaf, errType=regErr, ops=(1, 4)):
     tolS = ops[0]
     tolN = ops[1]
@@ -107,31 +132,6 @@ def prune(tree, testData):
             return tree
     else:
         return tree
-
-
-def linnearSolve(dataSet):
-    m, n = shape(dataSet)
-    # （以下两行）将X和Y中的数据格式化
-    X = mat(ones((m, n)))
-    # Y = mat(ones((m, 1)))
-    X[:, 1:n] = dataSet[:, 0:n - 1]
-    Y = mat(dataSet[:, -1])
-    xTx = X.T * X
-    if linalg.det(xTx) == 0.0:
-        raise NameError('This matrox is singular, cannot do inverse, try increasing the second value of ops')
-    ws = xTx.I * (X.T * Y)
-    return ws, X, Y
-
-
-def modelLeaf(dataSet):
-    ws, X, Y = linnearSolve(dataSet)
-    return ws
-
-
-def modelErr(dataSet):
-    ws, X, Y = linnearSolve(dataSet)
-    yHat = X * ws
-    return sum(power(Y - yHat, 2))
 
 
 if __name__ == "__main__":
