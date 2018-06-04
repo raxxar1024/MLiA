@@ -114,12 +114,12 @@ def linnearSolve(dataSet):
     # （以下两行）将X和Y中的数据格式化
     X = mat(ones((m, n)))
     # Y = mat(ones((m, 1)))
-    X[:, 1:n] = dataSet[:, 0, n - 1]
+    X[:, 1:n] = dataSet[:, 0:n - 1]
     Y = mat(dataSet[:, -1])
     xTx = X.T * X
     if linalg.det(xTx) == 0.0:
         raise NameError('This matrox is singular, cannot do inverse, try increasing the second value of ops')
-    ws = xTx.T * (X.T * Y)
+    ws = xTx.I * (X.T * Y)
     return ws, X, Y
 
 
@@ -146,12 +146,15 @@ if __name__ == "__main__":
     # myMat1 = mat(myDat1)
     # print createTree(myMat1)
 
-    myDat2 = loadDataSet('ex2.txt')
-    myMat2 = mat(myDat2)
+    # myDat2 = loadDataSet('ex2.txt')
+    # myMat2 = mat(myDat2)
     # print createTree(myMat2)
     # print createTree(myMat2, ops=(10000, 4))
 
-    myTree = createTree(myMat2, ops=(0, 1))
-    myDatTest = loadDataSet('ex2test.txt')
-    myMat2Test = mat(myDatTest)
-    print prune(myTree, myMat2Test)
+    # myTree = createTree(myMat2, ops=(0, 1))
+    # myDatTest = loadDataSet('ex2test.txt')
+    # myMat2Test = mat(myDatTest)
+    # print prune(myTree, myMat2Test)
+
+    myMat2 = mat(loadDataSet('exp2.txt'))
+    print createTree(myMat2, modelLeaf, modelErr, (1, 10))
