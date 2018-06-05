@@ -134,6 +134,10 @@ def prune(tree, testData):
         return tree
 
 
+def regTreeEval(model, inDat):
+    return float(model)
+
+
 if __name__ == "__main__":
     # testMat = mat(eye(4))
     # print binSplitDataSet(testMat, 1, 0.5)
