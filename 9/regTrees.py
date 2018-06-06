@@ -138,6 +138,36 @@ def regTreeEval(model, inDat):
     return float(model)
 
 
+def modelTreeEval(model, inDat):
+    n = shape(inDat)[1]
+    X = mat(ones((1, n + 1)))
+    X[:, 1:n + 1] = inDat
+    return float(X * model)
+
+
+def treeForeCast(tree, inData, modelEval=regTreeEval):
+    if not isTree(tree):
+        return modelEval(tree, inData)
+    if inData[tree['spInd']] > tree['spVal']:
+        if isTree(tree['left']):
+            return treeForeCast(tree['left'], inData, modelEval)
+        else:
+            return modelEval(tree['left'], inData)
+    else:
+        if isTree(tree['right']):
+            return treeForeCast(tree['right'], inData, modelEval)
+        else:
+            return modelEval(tree['right'], inData)
+
+
+def createForeCast(tree, testData, modelEval=regTreeEval):
+    m = len(testData)
+    yHat = mat(zeros((m, 1)))
+    for i in range(m):
+        yHat[i, 0] = treeForeCast(tree, mat(testData[i]), modelEval)
+    return yHat
+
+
 if __name__ == "__main__":
     # testMat = mat(eye(4))
     # print binSplitDataSet(testMat, 1, 0.5)
@@ -160,5 +190,19 @@ if __name__ == "__main__":
     # myMat2Test = mat(myDatTest)
     # print prune(myTree, myMat2Test)
 
-    myMat2 = mat(loadDataSet('exp2.txt'))
-    print createTree(myMat2, modelLeaf, modelErr, (1, 10))
+    # myMat2 = mat(loadDataSet('exp2.txt'))
+    # print createTree(myMat2, modelLeaf, modelErr, (1, 10))
+
+    trainMat = mat(loadDataSet('bikeSpeedVsIq_train.txt'))
+    testMat = mat(loadDataSet('bikeSpeedVsIq_test.txt'))
+    myTree = createTree(trainMat, ops=(1, 20))
+    yHat = createForeCast(myTree, testMat[:, 0])
+    print corrcoef(yHat, testMat[:, 1], rowvar=0)[0, 1]
+    myTree = createTree(trainMat, modelLeaf, modelErr, ops=(1, 20))
+    yHat = createForeCast(myTree, testMat[:, 0], modelTreeEval)
+    print corrcoef(yHat, testMat[:, 1], rowvar=0)[0, 1]
+    ws, X, y = linearSolve(trainMat)
+    print ws
+    for i in range(shape(testMat)[0]):
+        yHat[i] = testMat[i, 0] * ws[1, 0] + ws[0, 0]
+    print corrcoef(yHat, testMat[:, 1], rowvar=0)[0, 1]
