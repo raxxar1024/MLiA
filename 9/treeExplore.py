@@ -6,7 +6,7 @@ import regTrees
 import matplotlib
 
 matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 
@@ -22,18 +22,41 @@ def reDraw(tolS, tolN):
     else:
         myTree = regTrees.createTree(reDraw.rawDat, ops=(tolS, tolN))
         yHat = regTrees.createForeCast(myTree, reDraw.testDat)
-    reDraw.a.scatter(reDraw.rawDat[:, 0], reDraw.rawDat[:, 1], s=5)
+    reDraw.a.scatter(reDraw.rawDat[:, 0].tolist(), reDraw.rawDat[:, 1].tolist(), s=5)
     reDraw.a.plot(reDraw.testDat, yHat, linewidth=2.0)
     reDraw.canvas.show()
 
 
+def getInputs():
+    try:
+        tolN = int(tolNentry.get())
+    except:
+        tolN = 10
+        print "enter Integer for tolN"
+        # （以下两行）清除错误的输入并用默认值替换
+        tolNentry.delete(0, END)
+        tolNentry.insert(0, '10')
+    try:
+        tolS = float(tolSentry.get())
+    except:
+        tolS = 1.0
+        print "enter Float for tolS"
+        tolSentry.delete(0, END)
+        tolSentry.insert(0, '1.0')
+    return tolN, tolS
+
+
 def drawNewTree():
-    pass
+    tolN, tolS = getInputs()
+    reDraw(tolS, tolN)
 
 
 root = Tk()
 
-Label(root, text="Plot Place Holder").grid(row=0, columnspan=3)
+reDraw.f = Figure(figsize=(5, 4), dpi=100)
+reDraw.canvas = FigureCanvasTkAgg(reDraw.f, master=root)
+reDraw.canvas.show()
+reDraw.canvas.get_tk_widget().grid(row=0, columnspan=3)
 
 Label(root, text="tolN").grid(row=1, column=0)
 tolNentry = Entry(root)
@@ -52,10 +75,5 @@ reDraw.rawDat = mat(regTrees.loadDataSet('sine.txt'))
 reDraw.testDat = arange(min(reDraw.rawDat[:, 0]), max(reDraw.rawDat[:, 0]), 0.01)
 
 reDraw(1.0, 10)
-
-reDraw.f = Figure(figsize=(5, 4), dpi=100)
-reDraw.canvas = FigureCanvasAgg(reDraw(reDraw.f, master=root))
-reDraw.canvas.show()
-reDraw.canvas.get_tk_widget().grid(row=0, columnspan=3)
 
 root.mainloop()
