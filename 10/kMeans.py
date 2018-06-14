@@ -29,4 +29,9 @@ def ranCent(dataSet, k):
 
 
 if __name__ == "__main__":
-    testMat = mat(eye(4))
+    datMat = mat(loadDataSet('testSet.txt'))
+    print min(datMat[:, 0])
+    print min(datMat[:, 1])
+    print max(datMat[:, 0])
+    print max(datMat[:, 1])
+    print ranCent(datMat, 2)
