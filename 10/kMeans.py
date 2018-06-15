@@ -35,3 +35,4 @@ if __name__ == "__main__":
     print max(datMat[:, 0])
     print max(datMat[:, 1])
     print ranCent(datMat, 2)
+    print distEclud(datMat[0], datMat[1])
