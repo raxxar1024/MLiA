@@ -57,10 +57,10 @@ def kMeans(dataSet, k, distMeas=distEclud, createCent=randCent):
 
 if __name__ == "__main__":
     datMat = mat(loadDataSet('testSet.txt'))
-    print min(datMat[:, 0])
-    print min(datMat[:, 1])
-    print max(datMat[:, 0])
-    print max(datMat[:, 1])
-    print randCent(datMat, 2)
-    print distEclud(datMat[0], datMat[1])
+    # print min(datMat[:, 0])
+    # print min(datMat[:, 1])
+    # print max(datMat[:, 0])
+    # print max(datMat[:, 1])
+    # print randCent(datMat, 2)
+    # print distEclud(datMat[0], datMat[1])
     print kMeans(datMat, 4)
