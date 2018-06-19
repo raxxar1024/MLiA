@@ -89,11 +89,14 @@ def biKmeans(dataSet, k, distMeas=distEclud):
 
 
 if __name__ == "__main__":
-    datMat = mat(loadDataSet('testSet.txt'))
+    # datMat = mat(loadDataSet('testSet.txt'))
     # print min(datMat[:, 0])
     # print min(datMat[:, 1])
     # print max(datMat[:, 0])
     # print max(datMat[:, 1])
     # print randCent(datMat, 2)
     # print distEclud(datMat[0], datMat[1])
-    print kMeans(datMat, 4)
+    # print kMeans(datMat, 4)
+
+    dataMat3 = mat(loadDataSet('testSet2.txt'))
+    print biKmeans(dataMat3, 3)
