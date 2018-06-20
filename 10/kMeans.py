@@ -68,23 +68,23 @@ def biKmeans(dataSet, k, distMeas=distEclud):
         for i in range(len(centList)):
             # (以下两行)尝试划分每一簇
             ptsInCurrCluster = dataSet[nonzero(clusterAssment[:, 0].A == i)[0], :]
-            centroidMat, splitClusterAss = kMeans(ptsInCurrCluster, 2, distMeas)
-            sseSplit = sum(splitClusterAss[:, 1])
+            centroidMat, splitClustAss = kMeans(ptsInCurrCluster, 2, distMeas)
+            sseSplit = sum(splitClustAss[:, 1])
             sseNotSplit = sum(clusterAssment[nonzero(clusterAssment[:, 0].A != i)[0], 1])
             print "sseSplit, and notSplit: ", sseSplit, sseNotSplit
             if sseSplit + sseNotSplit < lowestSSE:
                 bestCentToSplit = i
                 bestNewCents = centroidMat
-                bestClustAss = splitClusterAss.copy()
+                bestClustAss = splitClustAss.copy()
                 lowestSSE = sseSplit + sseNotSplit
         # (以下两行)更新簇的分配结果
         bestClustAss[nonzero(bestClustAss[:, 0].A == 1)[0], 0] = len(centList)
         bestClustAss[nonzero(bestClustAss[:, 0].A == 0)[0], 0] = bestCentToSplit
         print "the bestCentToSplit is: ", bestCentToSplit
         print "the len of bestClusterAss is: ", len(bestClustAss)
-        centList[bestCentToSplit] = bestNewCents[0, :]
-        centList.append(bestNewCents[1, :])
-        clusterAssment[nonzero(clusterAssment[:, 0]).A == bestCentToSplit[0], :] = bestClustAss
+        centList[bestCentToSplit] = bestNewCents[0, :].tolist()[0]
+        centList.append(bestNewCents[1, :].tolist()[0])
+        clusterAssment[nonzero(clusterAssment[:, 0].A == bestCentToSplit)[0], :] = bestClustAss
     return mat(centList), clusterAssment
 
 
