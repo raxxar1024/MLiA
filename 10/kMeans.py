@@ -48,7 +48,7 @@ def kMeans(dataSet, k, distMeas=distEclud, createCent=randCent):
                 clusterChanged = True
             clusterAssment[i, :] = minIndex, minDist ** 2
         # （以下四行）更新质心的位置
-        print centroids
+        # print centroids
         for cent in range(k):
             ptsInClust = dataSet[nonzero(clusterAssment[:, 0].A == cent)[0]]
             centroids[cent, :] = mean(ptsInClust, axis=0)
@@ -99,4 +99,5 @@ if __name__ == "__main__":
     # print kMeans(datMat, 4)
 
     dataMat3 = mat(loadDataSet('testSet2.txt'))
-    print biKmeans(dataMat3, 3)
+    centList, myNewAssments = biKmeans(dataMat3, 3)
+    print centList
