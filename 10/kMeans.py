@@ -93,20 +93,53 @@ import json
 
 
 def geoGrab(stAddress, city):
-    apiStem = "http://where.yahooapis.com/geocode?"
-    param = {}
+    apiStem = 'http://where.yahooapis.com/geocode?'
+    params = {}
+    # 将返回类型设置JSON
+    params['flags'] = 'J'
+    params['appid'] = 'aaa0VN6k'
+    params['location'] = '%s %s' % (stAddress, city)
+    url_params = urllib.urlencode(params)
+    yahooApi = apiStem + url_params
+    # 打印输出的URL
+    print yahooApi
+    c = urllib.urlopen(yahooApi)
+    return json.loads(c.read())
+
+
+from time import sleep
+
+
+def massPlaceFind(fileName):
+    fw = open('places.txt', 'w')
+    for line in open(fileName).readlines():
+        line = line.strip()
+        lineArr = line.split('\t')
+        retDict = geoGrab(lineArr[1], lineArr[2])
+        if retDict['ResultSet']['Error'] == 0:
+            lat = float(retDict['ResultSet']['Results'][0]['latitude'])
+            lng = float(retDict['ResultSet']['Results'][0]['longitude'])
+            print "%s\t%f\t%f" % (lineArr[0], lat, lng)
+            fw.write("%s\t%f\t%f\n" % (line, lat, lng))
+        else:
+            print "error fetching"
+        sleep(1)
+    fw.close()
 
 
 if __name__ == "__main__":
-    datMat = mat(loadDataSet('testSet.txt'))
+    # datMat = mat(loadDataSet('testSet.txt'))
     # print min(datMat[:, 0])
     # print min(datMat[:, 1])
     # print max(datMat[:, 0])
     # print max(datMat[:, 1])
     # print randCent(datMat, 2)
     # print distEclud(datMat[0], datMat[1])
-    print kMeans(datMat, 4)
+    # print kMeans(datMat, 4)
 
-    dataMat3 = mat(loadDataSet('testSet2.txt'))
-    centList, myNewAssments = biKmeans(dataMat3, 3)
-    print centList
+    # dataMat3 = mat(loadDataSet('testSet2.txt'))
+    # centList, myNewAssments = biKmeans(dataMat3, 3)
+    # print centList
+
+    print geoGrab('1 VA Center', 'Augusta, ME')
+    massPlaceFind('portlandClubs.txt')  # yahoo服务不能用，但反正是用来生成了places.txt文件
