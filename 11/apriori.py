@@ -64,6 +64,18 @@ def apriori(dataSet, minSupport=0.5):
     return L, supportData
 
 
+def generateRules(L, supportData, minConf=0.7):
+    bigRuleList = []
+    for i in range(1, len(L)):
+        for freqSet in L[i]:
+            H1 = [frozenset([item]) for item in frozenset]
+            if i < 1:
+                rulesFromConseq(freqSet, H1, supportData, bigRuleList, minConf)
+            else:
+                calcConf(freqSet, H1, supportData, bigRuleList, minConf)
+    return bigRuleList
+
+
 if __name__ == "__main__":
     dataSet = loadDataSet()
     C1 = createC1(dataSet)
