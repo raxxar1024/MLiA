@@ -59,6 +59,7 @@ def apriori(dataSet, minSupport=0.5):
     while len(L[k - 2]) > 0:
         Ck = aprioriGen(L[k - 2], k)
         Lk, supK = scanD(D, Ck, minSupport)
+        supportData.update(supK)
         L.append(Lk)
         k += 1
     return L, supportData
@@ -68,8 +69,8 @@ def generateRules(L, supportData, minConf=0.7):
     bigRuleList = []
     for i in range(1, len(L)):
         for freqSet in L[i]:
-            H1 = [frozenset([item]) for item in frozenset]
-            if i < 1:
+            H1 = [frozenset([item]) for item in freqSet]
+            if i > 1:
                 rulesFromConseq(freqSet, H1, supportData, bigRuleList, minConf)
             else:
                 calcConf(freqSet, H1, supportData, bigRuleList, minConf)
@@ -98,15 +99,21 @@ def rulesFromConseq(freqSet, H, supportData, brl, minConf=0.7):
 
 if __name__ == "__main__":
     dataSet = loadDataSet()
-    C1 = createC1(dataSet)
-    D = map(set, dataSet)
-    L1, suppData0 = scanD(D, C1, 0.5)
-    print dataSet, C1, D, L1, suppData0
+    # C1 = createC1(dataSet)
+    # D = map(set, dataSet)
+    # L1, suppData0 = scanD(D, C1, 0.5)
+    # print dataSet, C1, D, L1, suppData0
+    #
+    # L, suppData = apriori(dataSet)
+    # print L
+    # print suppData
+    # print aprioriGen(L[0], 2)
+    #
+    # L, suppData = apriori(dataSet, minSupport=0.7)
+    # print L
 
-    L, suppData = apriori(dataSet)
-    print L
-    print suppData
-    print aprioriGen(L[0], 2)
-
-    L, suppData = apriori(dataSet, minSupport=0.7)
-    print L
+    L, suppData = apriori(dataSet, minSupport=0.5)
+    rules = generateRules(L, suppData, minConf=0.7)
+    print rules
+    rules = generateRules(L, suppData, minConf=0.5)
+    print rules
