@@ -97,8 +97,19 @@ def rulesFromConseq(freqSet, H, supportData, brl, minConf=0.7):
             rulesFromConseq(freqSet, Hmp1, supportData, brl, minConf)
 
 
+from time import sleep
+from votesmart import votesmart
+
+votesmart.apikey = "***"
+
+
+def getActionIds():
+    actionIdList = []
+    billTitleList = []
+
+
 if __name__ == "__main__":
-    dataSet = loadDataSet()
+    # dataSet = loadDataSet()
     # C1 = createC1(dataSet)
     # D = map(set, dataSet)
     # L1, suppData0 = scanD(D, C1, 0.5)
@@ -112,8 +123,15 @@ if __name__ == "__main__":
     # L, suppData = apriori(dataSet, minSupport=0.7)
     # print L
 
-    L, suppData = apriori(dataSet, minSupport=0.5)
-    rules = generateRules(L, suppData, minConf=0.7)
-    print rules
-    rules = generateRules(L, suppData, minConf=0.5)
-    print rules
+    # dataSet = loadDataSet()
+    # L, suppData = apriori(dataSet, minSupport=0.5)
+    # rules = generateRules(L, suppData, minConf=0.7)
+    # print rules
+    # rules = generateRules(L, suppData, minConf=0.5)
+    # print rules
+
+    from votesmart import votesmart
+
+    votesmart.apikey = 'a7fa40adec6f4a77178799fae4441030'
+    bills = votesmart.votes.getBillsByStateRecent()
+    print bills
