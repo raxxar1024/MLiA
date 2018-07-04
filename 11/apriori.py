@@ -100,7 +100,7 @@ def rulesFromConseq(freqSet, H, supportData, brl, minConf=0.7):
 from time import sleep
 from votesmart import votesmart
 
-votesmart.apikey = '49024thereoncewasamanfromnantucket94040'
+votesmart.apikey = '6e4b602f0f7406192282ef8523883b24'
 
 
 def getActionIds():
