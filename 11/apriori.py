@@ -124,6 +124,35 @@ def getActionIds():
     return actionIdList, billTitleList
 
 
+def getTransList(actionIdList, billTitleList):
+    itemMeaning = ['Republican', 'Democratic']
+    for billTitle in billTitleList:
+        itemMeaning.append('%s -- Nay' % billTitle)
+        itemMeaning.append('%s -- Yea' % billTitle)
+    transDict = {}
+    voteCount = 2
+    for actionId in actionIdList:
+        sleep(3)
+        print 'getting votes for actionId: %d' % actionId
+        try:
+            voteList = votesmart.votes.getBillActionVotes(actionId)
+            for vote in voteList:
+                if not transDict.has_key(vote.candidateName):
+                    transDict[vote.candidateName] = []
+                    if vote.officeParties == 'Democratic':
+                        transDict[vote.candidateName].append(1)
+                    elif vote.officeParties == 'Republican':
+                        transDict[vote.candidateName].append(0)
+                if vote.action == 'Nay':
+                    transDict[vote.candidateName].append(voteCount)
+                elif vote.action == 'Yea':
+                    transDict[vote.candidateName].append(voteCount + 1)
+        except:
+            print 'problem getting actionId: %d' % actionId
+        voteCount += 2
+    return transDict, itemMeaning
+
+
 if __name__ == "__main__":
     # dataSet = loadDataSet()
     # C1 = createC1(dataSet)
@@ -147,3 +176,7 @@ if __name__ == "__main__":
     # print rules
 
     actionIdList, billTitles = getActionIds()
+    transDict, itemMeaning = getTransList(actionIdList[:2], billTitles[:2])
+    print transDict
+    dataSet = [transDict[key] for key in transDict.keys()]
+    print dataSet
