@@ -180,3 +180,7 @@ if __name__ == "__main__":
     print transDict
     dataSet = [transDict[key] for key in transDict.keys()]
     print dataSet
+
+    L, suppData = apriori(dataSet, minSupport=0.3)
+    rules = generateRules(L, suppData, minConf=0.99)
+    print rules
