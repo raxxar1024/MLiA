@@ -26,8 +26,8 @@ def createTree(dataSet, minSup=1):
     for k in headerTable.keys():
         if headerTable[k] < minSup:
             del (headerTable[k])
-    freqitemSet = set(headerTable.keys())
-    if len(freqitemSet) == 0:
+    freqItemSet = set(headerTable.keys())
+    if len(freqItemSet) == 0:
         return None, None
     for k in headerTable:
         headerTable[k] = [headerTable[k], None]
@@ -35,7 +35,7 @@ def createTree(dataSet, minSup=1):
     for tranSet, count in dataSet.items():
         localD = {}
         for item in tranSet:
-            if item in freqitemSet:
+            if item in freqItemSet:
                 localD[item] = headerTable[item][0]
         if len(localD) > 0:
             orderedItems = [v[0] for v in sorted(localD.items(), key=lambda p: p[1], reverse=True)]
