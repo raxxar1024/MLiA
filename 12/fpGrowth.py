@@ -49,7 +49,7 @@ def updateTree(items, inTree, headerTable, count):
     else:
         inTree.children[items[0]] = treeNode(items[0], count, inTree)
         if headerTable[items[0]][1] == None:
-            headerTable[items][0][1] = inTree.children[items[0]]
+            headerTable[items[0]][1] = inTree.children[items[0]]
         else:
             updateHeader(headerTable[items[0]][1], inTree.children[items[0]])
     if len(items) > 1:
@@ -62,9 +62,33 @@ def updateHeader(nodeToTest, targetNode):
     nodeToTest.nodeLink = targetNode
 
 
+def loadSimpDat():
+    simpDat = [
+        ['r', 'z', 'h', 'j', 'p'],
+        ['z', 'y', 'x', 'w', 'v', 'u', 't', 's'],
+        ['z'],
+        ['r', 'x', 'n', 'o', 's'],
+        ['y', 'r', 'x', 'z', 'q', 't', 'p'],
+        ['y', 'z', 'x', 'e', 'q', 's', 't', 'm'],
+    ]
+    return simpDat
+
+
+def createInitSet(dataSet):
+    retDict = {}
+    for trans in dataSet:
+        retDict[frozenset(trans)] = 1
+    return retDict
+
+
 if __name__ == "__main__":
-    rootNode = treeNode('pyramid', 9, None)
-    rootNode.children['eye'] = treeNode('eye', 13, None)
-    rootNode.disp()
-    rootNode.children['phoenix'] = treeNode('phoenix', 3, None)
-    rootNode.disp()
+    # rootNode = treeNode('pyramid', 9, None)
+    # rootNode.children['eye'] = treeNode('eye', 13, None)
+    # rootNode.disp()
+    # rootNode.children['phoenix'] = treeNode('phoenix', 3, None)
+    # rootNode.disp()
+
+    simpDat = loadSimpDat()
+    initSet = createInitSet(simpDat)
+    myFPtree, myHeaderTab = createTree(initSet, 3)
+    myFPtree.disp()
