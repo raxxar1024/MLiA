@@ -81,6 +81,23 @@ def createInitSet(dataSet):
     return retDict
 
 
+def ascendTree(leadNode, prefixPath):
+    if leadNode.parent != None:
+        prefixPath.append(leadNode.name)
+        ascendTree(leadNode.parent, prefixPath)
+
+
+def findPrefixPath(basePat, treeNode):
+    condPats = {}
+    while treeNode != None:
+        prefixPath = []
+        ascendTree(treeNode, prefixPath)
+        if len(prefixPath) > 1:
+            condPats[frozenset(prefixPath[1:])] = treeNode.count
+        treeNode = treeNode.nodeLink
+    return condPats
+
+
 if __name__ == "__main__":
     # rootNode = treeNode('pyramid', 9, None)
     # rootNode.children['eye'] = treeNode('eye', 13, None)
@@ -92,3 +109,7 @@ if __name__ == "__main__":
     initSet = createInitSet(simpDat)
     myFPtree, myHeaderTab = createTree(initSet, 3)
     myFPtree.disp()
+
+    # print findPrefixPath('x', myHeaderTab['x'][1])
+    print findPrefixPath('z', myHeaderTab['z'][1])
+    print findPrefixPath('r', myHeaderTab['r'][1])
