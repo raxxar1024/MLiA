@@ -112,6 +112,45 @@ def mineTree(inTree, headerTable, minSup, preFix, freqItemList):
             mineTree(myCondTree, myHead, minSup, newFreqSet, freqItemList)
 
 
+import twitter
+from time import sleep
+import re
+
+
+def getLotsOfTweets(searchStr):
+    CONSUMER_KEY = 'MxOBZcTCTzsCbGGCFkyK4f90L'
+    CONSUMER_SECRET = 'X4o1mVtbrRQSXpWlvkaZEbzIZD4FByLu7hzP0VGjQoCxVwGkmF'
+    ACCESS_TOKEN_KEY = '924730639047327744-E4JEEZRreryFw4cnlALuscttLH5dvH6'
+    ACCESS_TOKEN_SECRET = 'QBiuxw3muA0W3rzLWmyPO7G1z5QtiK4AKNVhcvYN1dV5B'
+    api = twitter.Api(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET,
+                      access_token_key=ACCESS_TOKEN_KEY, access_token_secret=ACCESS_TOKEN_SECRET)
+    resultsPages = []
+    for i in range(1, 15):
+        print 'fetching page %d' % i
+        seachResults = api.GetSearch(searchStr, count=i)
+        resultsPages.append(seachResults)
+        sleep(6)
+    return resultsPages
+
+
+def textParse(bigString):
+    urlsRemoved = re.sub('(http[s]?:[/][/]|www.)([a-z]|[A-Z]|[0-9]|[.] |[~])*', '', bigString)
+    listOfTokens = re.split(r'\W*', urlsRemoved)
+    return [tok.lower() for tok in listOfTokens if len(tok) > 2]
+
+
+def mineTweets(tweetArr, minSup=5):
+    parsedList = []
+    for i in range(4):
+        for j in range(100):
+            parsedList.append(textParse(tweetArr[i][j].text))
+    initSet = createInitSet(parsedList)
+    myFPtree, myHeaderTab = createTree(initSet, minSup)
+    myFreqList = []
+    mineTree(myFPtree, myHeaderTab, set([]), myFreqList)
+    return myFreqList
+
+
 if __name__ == "__main__":
     # rootNode = treeNode('pyramid', 9, None)
     # rootNode.children['eye'] = treeNode('eye', 13, None)
@@ -119,14 +158,21 @@ if __name__ == "__main__":
     # rootNode.children['phoenix'] = treeNode('phoenix', 3, None)
     # rootNode.disp()
 
-    simpDat = loadSimpDat()
-    initSet = createInitSet(simpDat)
-    myFPtree, myHeaderTab = createTree(initSet, 3)
-    myFPtree.disp()
+    # simpDat = loadSimpDat()
+    # initSet = createInitSet(simpDat)
+    # myFPtree, myHeaderTab = createTree(initSet, 3)
+    # myFPtree.disp()
 
     # print findPrefixPath('x', myHeaderTab['x'][1])
     # print findPrefixPath('z', myHeaderTab['z'][1])
     # print findPrefixPath('r', myHeaderTab['r'][1])
 
-    freqItems = []
-    print mineTree(myFPtree, myHeaderTab, 3, set([]), freqItems)
+    # freqItems = []
+    # print mineTree(myFPtree, myHeaderTab, 3, set([]), freqItems)
+
+    # 无法运行，因为无法访问twitter
+    lotsOtweets = getLotsOfTweets('RIMM')
+    # listOfTerms = mineTweets(lotsOtweets, 20)
+    # print len(listOfTerms)
+    # for t in listOfTerms:
+    #     print t
