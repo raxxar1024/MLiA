@@ -81,10 +81,10 @@ def createInitSet(dataSet):
     return retDict
 
 
-def ascendTree(leadNode, prefixPath):
-    if leadNode.parent != None:
-        prefixPath.append(leadNode.name)
-        ascendTree(leadNode.parent, prefixPath)
+def ascendTree(leafNode, prefixPath):
+    if leafNode.parent != None:
+        prefixPath.append(leafNode.name)
+        ascendTree(leafNode.parent, prefixPath)
 
 
 def findPrefixPath(basePat, treeNode):
@@ -96,6 +96,20 @@ def findPrefixPath(basePat, treeNode):
             condPats[frozenset(prefixPath[1:])] = treeNode.count
         treeNode = treeNode.nodeLink
     return condPats
+
+
+def mineTree(inTree, headerTable, minSup, preFix, freqItemList):
+    bigL = [v[0] for v in sorted(headerTable.items(), key=lambda p: p[1])]
+    for basePat in bigL:
+        newFreqSet = preFix.copy()
+        newFreqSet.add(basePat)
+        freqItemList.append(newFreqSet)
+        condPattBases = findPrefixPath(basePat, headerTable[basePat][1])
+        myCondTree, myHead = createTree(condPattBases, minSup)
+        if myHead != None:
+            print 'conditional tree for: ', newFreqSet
+            myCondTree.disp(1)
+            mineTree(myCondTree, myHead, minSup, newFreqSet, freqItemList)
 
 
 if __name__ == "__main__":
@@ -111,5 +125,8 @@ if __name__ == "__main__":
     myFPtree.disp()
 
     # print findPrefixPath('x', myHeaderTab['x'][1])
-    print findPrefixPath('z', myHeaderTab['z'][1])
-    print findPrefixPath('r', myHeaderTab['r'][1])
+    # print findPrefixPath('z', myHeaderTab['z'][1])
+    # print findPrefixPath('r', myHeaderTab['r'][1])
+
+    freqItems = []
+    print mineTree(myFPtree, myHeaderTab, 3, set([]), freqItems)
