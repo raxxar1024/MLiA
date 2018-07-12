@@ -171,8 +171,17 @@ if __name__ == "__main__":
     # print mineTree(myFPtree, myHeaderTab, 3, set([]), freqItems)
 
     # 无法运行，因为无法访问twitter
-    lotsOtweets = getLotsOfTweets('RIMM')
+    # lotsOtweets = getLotsOfTweets('RIMM')
     # listOfTerms = mineTweets(lotsOtweets, 20)
     # print len(listOfTerms)
     # for t in listOfTerms:
     #     print t
+
+    parsedDat = [line.split() for line in open('kosarak.dat').readlines()]
+    initSet = createInitSet(parsedDat)
+    myFPtree, myHeaderTab = createTree(initSet, 100000)
+    myFPtree.disp()
+    myFreqList = []
+    mineTree(myFPtree, myHeaderTab, 100000, set([]), myFreqList)
+    print len(myFreqList)
+    print myFreqList
