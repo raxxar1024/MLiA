@@ -118,10 +118,10 @@ import re
 
 
 def getLotsOfTweets(searchStr):
-    CONSUMER_KEY = 'MxOBZcTCTzsCbGGCFkyK4f90L'
-    CONSUMER_SECRET = 'X4o1mVtbrRQSXpWlvkaZEbzIZD4FByLu7hzP0VGjQoCxVwGkmF'
-    ACCESS_TOKEN_KEY = '924730639047327744-E4JEEZRreryFw4cnlALuscttLH5dvH6'
-    ACCESS_TOKEN_SECRET = 'QBiuxw3muA0W3rzLWmyPO7G1z5QtiK4AKNVhcvYN1dV5B'
+    CONSUMER_KEY = 'XXX'
+    CONSUMER_SECRET = 'XXX'
+    ACCESS_TOKEN_KEY = 'XXX'
+    ACCESS_TOKEN_SECRET = 'XXX'
     api = twitter.Api(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET,
                       access_token_key=ACCESS_TOKEN_KEY, access_token_secret=ACCESS_TOKEN_SECRET)
     resultsPages = []
