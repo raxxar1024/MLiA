@@ -29,3 +29,13 @@ def pca(dataMat, topNfeat=9999999):
 
 if __name__ == "__main__":
     dataMat = loadDataSet('testSet.txt')
+    lowDMat, reconMat = pca(dataMat, 1)
+    # lowDMat, reconMat = pca(dataMat, 2)
+    print shape(lowDMat)
+    import matplotlib
+    import matplotlib.pyplot as plt
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.scatter(dataMat[:, 0].flatten().A[0], dataMat[:, 1].flatten().A[0], marker='^', s=90)
+    ax.scatter(reconMat[:, 0].flatten().A[0], reconMat[:, 1].flatten().A[0], marker='o', s=50, c='red')
