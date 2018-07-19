@@ -20,3 +20,4 @@ if __name__ == "__main__":
     Data = loadExData()
     U, Sigma, VT = linalg.svd(Data)
     print Sigma
+
