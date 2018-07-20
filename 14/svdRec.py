@@ -21,3 +21,5 @@ if __name__ == "__main__":
     U, Sigma, VT = linalg.svd(Data)
     print Sigma
 
+    Sig3 = mat([[Sigma[0], 0, 0], [0, Sigma[1], 0], [0, 0, Sigma[2]]])
+    print U[:, : 3] * Sig3 * VT[: 3, :]
