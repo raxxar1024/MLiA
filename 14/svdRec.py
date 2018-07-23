@@ -46,14 +46,14 @@ def standEst(dataMat, user, simMeas, item):
             similarity = 0
         else:
             similarity = simMeas(dataMat[overlap, item], dataMat[overlap, j])
-        # print 'the %d and %d similarty is: %f' % (item, j, similarity)
+        print 'the %d and %d similarty is: %f' % (item, j, similarity)
         simTotal += similarity
         ratSimTotal += similarity * userRating
     if simTotal == 0:
         return 0
     else:
-        ratSimTotal / simTotal
-
+        return ratSimTotal / simTotal
+    
 
 def recommend(dataMat, user, N=3, simMeas=cosSim, estMethod=standEst):
     unratedItems = nonzero(dataMat[user, :].A == 0)[1]
