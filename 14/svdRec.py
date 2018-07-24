@@ -17,6 +17,22 @@ def loadExData():
     ]
 
 
+def loadExData2():
+    return [
+        [0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 5],
+        [0, 0, 0, 3, 0, 4, 0, 0, 0, 0, 3],
+        [0, 0, 0, 0, 4, 0, 0, 1, 0, 4, 0],
+        [3, 3, 4, 0, 0, 0, 0, 2, 2, 0, 0],
+        [5, 4, 5, 0, 0, 0, 0, 5, 5, 0, 0],
+        [0, 0, 0, 0, 5, 0, 1, 0, 0, 5, 0],
+        [4, 3, 4, 0, 0, 0, 0, 5, 5, 0, 1],
+        [0, 0, 0, 4, 0, 4, 0, 0, 0, 0, 4],
+        [0, 0, 0, 2, 0, 2, 5, 0, 0, 1, 2],
+        [0, 0, 0, 0, 5, 0, 0, 0, 0, 4, 0],
+        [1, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0]
+    ]
+
+
 def ecludSim(inA, inB):
     return 1.0 / (1.0 + la.norm(inA - inB))
 
@@ -46,14 +62,14 @@ def standEst(dataMat, user, simMeas, item):
             similarity = 0
         else:
             similarity = simMeas(dataMat[overlap, item], dataMat[overlap, j])
-        print 'the %d and %d similarty is: %f' % (item, j, similarity)
+        # print 'the %d and %d similarty is: %f' % (item, j, similarity)
         simTotal += similarity
         ratSimTotal += similarity * userRating
     if simTotal == 0:
         return 0
     else:
         return ratSimTotal / simTotal
-    
+
 
 def recommend(dataMat, user, N=3, simMeas=cosSim, estMethod=standEst):
     unratedItems = nonzero(dataMat[user, :].A == 0)[1]
@@ -81,10 +97,20 @@ if __name__ == "__main__":
     # print pearsSim(myMat[:, 0], myMat[:, 4])
     # print pearsSim(myMat[:, 0], myMat[:, 0])
 
-    myMat = mat(loadExData())
-    myMat[0, 1] = myMat[0, 0] = myMat[1, 0] = myMat[2, 0] = 4
-    myMat[3, 3] = 2
-    print myMat
-    print recommend(myMat, 2)
-    print recommend(myMat, 2, simMeas=ecludSim)
-    print recommend(myMat, 2, simMeas=pearsSim)
+    # myMat = mat(loadExData())
+    # myMat[0, 1] = myMat[0, 0] = myMat[1, 0] = myMat[2, 0] = 4
+    # myMat[3, 3] = 2
+    # print myMat
+    # print recommend(myMat, 2)
+    # print recommend(myMat, 2, simMeas=ecludSim)
+    # print recommend(myMat, 2, simMeas=pearsSim)
+
+    U, Sigma, VT = linalg.svd(loadExData2())
+    print Sigma
+    Sig2 = Sigma ** 2
+    print "sum of sig2 is %d, 90%% is %d" % (sum(Sig2), sum(Sig2) * 0.9)
+    print "first 2 is %d" % sum(Sig2[:2])
+    print "first 3 is %d" % sum(Sig2[:3])
+
+    Sig3 = mat([[Sigma[0], 0, 0], [0, Sigma[1], 0], [0, 0, Sigma[2]]])
+    # print U[:, : 3] * Sig3 * VT[: 3, :]
