@@ -71,6 +71,27 @@ def standEst(dataMat, user, simMeas, item):
         return ratSimTotal / simTotal
 
 
+def svdEst(dataMat, user, simMeas, item):
+    n = shape(dataMat)[1]
+    simTotal = 0.0
+    ratSimTotal = 0.0
+    U, Sigma, VT = la.svd(dataMat)
+    Sig4 = mat(eye(4) * Sigma[:4])
+    xformedItems = dataMat.T * U[:, : 4] * Sig4.I
+    for j in range(n):
+        userRating = dataMat[user, j]
+        if userRating == 0 or j == item:
+            continue
+        similarity = simMeas(xformedItems[item, :].T, xformedItems[j, :].T)
+        print 'the %d and %d similarity is: %f' % (item, j, similarity)
+        simTotal += similarity
+        ratSimTotal += similarity * userRating
+    if simTotal == 0:
+        return 0
+    else:
+        return ratSimTotal / simTotal
+
+
 def recommend(dataMat, user, N=3, simMeas=cosSim, estMethod=standEst):
     unratedItems = nonzero(dataMat[user, :].A == 0)[1]
     if len(unratedItems) == 0:
@@ -105,12 +126,15 @@ if __name__ == "__main__":
     # print recommend(myMat, 2, simMeas=ecludSim)
     # print recommend(myMat, 2, simMeas=pearsSim)
 
-    U, Sigma, VT = linalg.svd(loadExData2())
-    print Sigma
-    Sig2 = Sigma ** 2
-    print "sum of sig2 is %d, 90%% is %d" % (sum(Sig2), sum(Sig2) * 0.9)
-    print "first 2 is %d" % sum(Sig2[:2])
-    print "first 3 is %d" % sum(Sig2[:3])
-
-    Sig3 = mat([[Sigma[0], 0, 0], [0, Sigma[1], 0], [0, 0, Sigma[2]]])
+    # U, Sigma, VT = linalg.svd(loadExData2())
+    # print Sigma
+    # Sig2 = Sigma ** 2
+    # print "sum of sig2 is %d, 90%% is %d" % (sum(Sig2), sum(Sig2) * 0.9)
+    # print "first 2 is %d" % sum(Sig2[:2])
+    # print "first 3 is %d" % sum(Sig2[:3])
+    # Sig3 = mat([[Sigma[0], 0, 0], [0, Sigma[1], 0], [0, 0, Sigma[2]]])
     # print U[:, : 3] * Sig3 * VT[: 3, :]
+
+    myMat = mat(loadExData2())
+    print recommend(myMat, 1, estMethod=svdEst)
+    print recommend(myMat, 1, estMethod=svdEst, simMeas=pearsSim)
