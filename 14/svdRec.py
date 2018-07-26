@@ -103,6 +103,16 @@ def recommend(dataMat, user, N=3, simMeas=cosSim, estMethod=standEst):
     return sorted(itemScores, key=lambda jj: jj[1], reverse=True)[:N]
 
 
+def printMat(inMat, thresh=0.8):
+    for i in range(32):
+        for k in range(32):
+            if float(inMat[i, k]) > thresh:
+                print 1
+            else:
+                print 0
+        print ''
+        
+
 if __name__ == "__main__":
     # Data = loadExData()
     # U, Sigma, VT = linalg.svd(Data)
