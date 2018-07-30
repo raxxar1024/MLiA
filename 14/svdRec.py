@@ -107,11 +107,30 @@ def printMat(inMat, thresh=0.8):
     for i in range(32):
         for k in range(32):
             if float(inMat[i, k]) > thresh:
-                print 1
+                print 1,
             else:
-                print 0
+                print 0,
         print ''
-        
+
+
+def imgCompress(numSV=3, thresh=0.8):
+    myl = []
+    for line in open('0_5.txt').readlines():
+        newRow = []
+        for i in range(32):
+            newRow.append(int(line[i]))
+        myl.append(newRow)
+    myMat = mat(myl)
+    print '****original matrix****'
+    printMat(myMat, thresh)
+    U, Sigma, VT = la.svd(myMat)
+    SigRecon = mat(zeros((numSV, numSV)))
+    for k in range(numSV):
+        SigRecon[k, k] = Sigma[k]
+    reconMat = U[:, : numSV] * SigRecon * VT[:numSV, :]
+    print '****reconstructed matrix using %d singular values****'
+    printMat(reconMat, thresh)
+
 
 if __name__ == "__main__":
     # Data = loadExData()
@@ -145,6 +164,8 @@ if __name__ == "__main__":
     # Sig3 = mat([[Sigma[0], 0, 0], [0, Sigma[1], 0], [0, 0, Sigma[2]]])
     # print U[:, : 3] * Sig3 * VT[: 3, :]
 
-    myMat = mat(loadExData2())
-    print recommend(myMat, 1, estMethod=svdEst)
-    print recommend(myMat, 1, estMethod=svdEst, simMeas=pearsSim)
+    # myMat = mat(loadExData2())
+    # print recommend(myMat, 1, estMethod=svdEst)
+    # print recommend(myMat, 1, estMethod=svdEst, simMeas=pearsSim)
+
+    imgCompress(2)
