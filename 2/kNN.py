@@ -111,17 +111,17 @@ def handwritingClassTest():
 
 
 if __name__ == "__main__":
-    # import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
+
     # group, labels = createDataSet()
     # classify0([0, 0], group, labels, 3)
-    # datingDataMat, datingLabels = file2matrix('datingTestSet2.txt')
 
-
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111)
-    # ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2])
+    datingDataMat, datingLabels = file2matrix('datingTestSet2.txt')
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2])
     # ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2], 15.0 * array(datingLabels), 15.0 * array(datingLabels))
-    # plt.show()
+    plt.show()
 
     # normMat, ranges, minVals = autoNorm(datingDataMat)
     # print normMat
@@ -132,4 +132,4 @@ if __name__ == "__main__":
     # print testVector[0, 0:31]
     # print testVector[0, 32:63]
 
-    handwritingClassTest()
+    # handwritingClassTest()
